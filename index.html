@@ -225,6 +225,11 @@
   .btn-row-act:hover { border-color:var(--dorado); }
   .btn-row-act.danger { color:#A85040; border-color:rgba(168,80,64,0.3); }
   .btn-row-act.danger:hover { background:#A85040; color:#fff; border-color:#A85040; }
+  input[type=checkbox].kcheck { width:17px; height:17px; accent-color:var(--verde); cursor:pointer; vertical-align:middle; }
+  .admin-table th.col-check, .admin-table td.col-check { width:36px; text-align:center; }
+  .admin-bulk { display:none; align-items:center; gap:12px; flex-wrap:wrap; background:var(--crema2); border:1px solid rgba(201,168,76,0.45); border-radius:12px; padding:10px 14px; margin-bottom:14px; }
+  .admin-bulk.show { display:flex; }
+  .admin-bulk .bulk-count { font-size:13px; font-weight:600; color:var(--verde); }
 
   @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} }
   @media (max-width:768px){ nav{padding:16px 24px;} .nav-toggle{display:flex;} .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--crema);border-bottom:1px solid rgba(45,59,45,0.08);padding:0 24px;max-height:0;overflow:hidden;transition:max-height 0.3s ease;} .nav-links.open{max-height:80vh;padding:8px 24px 18px;} .nav-links a,.nav-links .btn-nav{width:100%;padding:15px 4px;border-bottom:1px solid rgba(45,59,45,0.06);text-align:left;border-radius:0;font-size:15px;} .nav-links .btn-nav{background:none;color:var(--verde);font-weight:500;} .nav-links a:last-child,.nav-links .btn-nav:last-child{border-bottom:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;flex-wrap:wrap;} .canjear-form input{flex:1 1 100%;width:auto;} .canjear-form .btn-canjear,.canjear-form .btn-scan{flex:1;} .admin-card{padding:22px 18px;} .admin-form{grid-template-columns:1fr;} }
@@ -409,9 +414,14 @@
         <button class="admin-tab" id="tab-eliminados" onclick="setAdminTab('eliminados')">Eliminados</button>
       </div>
       <div id="admin-stats" class="admin-stats"></div>
+      <div class="admin-bulk" id="admin-bulk">
+        <span class="bulk-count" id="bulk-count">0 seleccionados</span>
+        <span id="bulk-actions"></span>
+        <button class="btn-row-act" onclick="limpiarSeleccion()">Quitar selección</button>
+      </div>
       <div style="overflow-x:auto;">
         <table class="admin-table">
-          <thead><tr><th>Código</th><th>Kit</th><th>Lote</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <thead><tr><th class="col-check"><input type="checkbox" class="kcheck" id="check-all" onchange="toggleSelAll(this.checked)" /></th><th>Código</th><th>Kit</th><th>Lote</th><th>Estado</th><th>Acciones</th></tr></thead>
           <tbody id="admin-tbody"></tbody>
         </table>
       </div>
@@ -789,6 +799,7 @@
 
   let codigosCargados = [];
   let adminTab = 'sincanjear';
+  let seleccionados = new Set();
 
   async function cargarCodigosAdmin(){
     const lote = document.getElementById('admin-filter-lote').value.trim();
@@ -796,6 +807,7 @@
     if(lote){ q = q.eq('lote', lote); }
     const { data, error } = await q;
     codigosCargados = (error || !data) ? [] : data;
+    seleccionados.clear();
     if(error){ document.getElementById('admin-tbody').innerHTML=''; document.getElementById('admin-stats').textContent='No se pudieron cargar los códigos.'; return; }
     renderAdminTabla();
   }
@@ -810,6 +822,7 @@
 
   function setAdminTab(t){
     adminTab=t;
+    seleccionados.clear();
     ['sincanjear','canjeados','eliminados'].forEach(k=>{
       document.getElementById('tab-'+k).classList.toggle('active', k===t);
     });
@@ -826,11 +839,12 @@
     document.getElementById('tab-canjeados').textContent='Canjeados ('+nCanj+')';
     document.getElementById('tab-eliminados').textContent='Eliminados ('+nElim+')';
     const filas=codigosDeTab();
-    if(filas.length===0){ tbody.innerHTML=''; stats.textContent='No hay códigos en este apartado.'; return; }
+    if(filas.length===0){ tbody.innerHTML=''; stats.textContent='No hay códigos en este apartado.'; renderBulkBar(); return; }
     stats.textContent = filas.length+' código'+(filas.length===1?'':'s')+' en este apartado.';
     tbody.innerHTML = filas.map(r=>{
       const kit = r.kits ? r.kits.nombre : '—';
       const estado = r.usado?'<span class="estado-usado">Canjeado</span>':'<span class="estado-libre">Libre</span>';
+      const chk = seleccionados.has(r.codigo) ? 'checked' : '';
       let acc;
       if(adminTab==='eliminados'){
         acc = '<button class="btn-row-act" onclick="restaurarCodigo(\''+r.codigo+'\')">Restaurar</button> '+
@@ -838,8 +852,41 @@
       } else {
         acc = '<button class="btn-row-act danger" onclick="eliminarCodigo(\''+r.codigo+'\')">Eliminar</button>';
       }
-      return '<tr><td class="codigo-mono">'+r.codigo+'</td><td>'+kit+'</td><td>'+(r.lote||'—')+'</td><td>'+estado+'</td><td>'+acc+'</td></tr>';
+      return '<tr><td class="col-check"><input type="checkbox" class="kcheck" '+chk+' onchange="toggleSel(\''+r.codigo+'\',this.checked)" /></td>'+
+        '<td class="codigo-mono">'+r.codigo+'</td><td>'+kit+'</td><td>'+(r.lote||'—')+'</td><td>'+estado+'</td><td>'+acc+'</td></tr>';
     }).join('');
+    const all = document.getElementById('check-all');
+    all.checked = filas.length>0 && filas.every(r=>seleccionados.has(r.codigo));
+    renderBulkBar();
+  }
+
+  function toggleSel(code, checked){
+    if(checked) seleccionados.add(code); else seleccionados.delete(code);
+    const filas=codigosDeTab();
+    document.getElementById('check-all').checked = filas.length>0 && filas.every(r=>seleccionados.has(r.codigo));
+    renderBulkBar();
+  }
+  function toggleSelAll(checked){
+    const filas=codigosDeTab();
+    if(checked){ filas.forEach(r=>seleccionados.add(r.codigo)); } else { filas.forEach(r=>seleccionados.delete(r.codigo)); }
+    renderAdminTabla();
+  }
+  function limpiarSeleccion(){ seleccionados.clear(); renderAdminTabla(); }
+
+  function renderBulkBar(){
+    const bar=document.getElementById('admin-bulk');
+    const n=seleccionados.size;
+    if(n===0){ bar.classList.remove('show'); return; }
+    bar.classList.add('show');
+    document.getElementById('bulk-count').textContent = n+' seleccionado'+(n===1?'':'s');
+    let acc;
+    if(adminTab==='eliminados'){
+      acc = '<button class="btn-row-act" onclick="restaurarSeleccionados()">Restaurar seleccionados</button> '+
+            '<button class="btn-row-act danger" onclick="borrarSeleccionadosDef()">Borrar seleccionados</button>';
+    } else {
+      acc = '<button class="btn-row-act danger" onclick="eliminarSeleccionados()">Eliminar seleccionados</button>';
+    }
+    document.getElementById('bulk-actions').innerHTML = acc;
   }
 
   async function eliminarCodigo(code){
@@ -856,6 +903,27 @@
     if(!confirm('¿Borrar definitivamente el código '+code+'? Esta acción no se puede deshacer.')) return;
     const { error } = await sb.rpc('admin_borrar_codigo',{ p_codigo:code });
     if(error){ pdfmsg('No se pudo borrar el código.','error'); return; }
+    await cargarCodigosAdmin();
+  }
+
+  async function eliminarSeleccionados(){
+    const codes=[...seleccionados]; if(codes.length===0) return;
+    if(!confirm('¿Mover '+codes.length+' código(s) a la papelera?')) return;
+    const { error } = await sb.rpc('admin_marcar_eliminado_lote',{ p_codigos:codes, p_eliminado:true });
+    if(error){ pdfmsg('No se pudieron eliminar. ¿Has ejecutado el SQL de acciones en bloque?','error'); return; }
+    await cargarCodigosAdmin();
+  }
+  async function restaurarSeleccionados(){
+    const codes=[...seleccionados]; if(codes.length===0) return;
+    const { error } = await sb.rpc('admin_marcar_eliminado_lote',{ p_codigos:codes, p_eliminado:false });
+    if(error){ pdfmsg('No se pudieron restaurar.','error'); return; }
+    await cargarCodigosAdmin();
+  }
+  async function borrarSeleccionadosDef(){
+    const codes=[...seleccionados]; if(codes.length===0) return;
+    if(!confirm('¿Borrar DEFINITIVAMENTE '+codes.length+' código(s)? Esta acción no se puede deshacer.')) return;
+    const { error } = await sb.rpc('admin_borrar_codigos_lote',{ p_codigos:codes });
+    if(error){ pdfmsg('No se pudieron borrar.','error'); return; }
     await cargarCodigosAdmin();
   }
 
