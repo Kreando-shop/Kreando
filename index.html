@@ -171,8 +171,33 @@
   .modal-btn { background:var(--verde); color:var(--crema); border:none; border-radius:99px; padding:13px 34px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:background 0.2s; }
   .modal-btn:hover { background:var(--salvia); }
 
+  .admin-card { background:var(--blanco); border:1px solid rgba(45,59,45,0.08); border-radius:20px; padding:28px 32px; margin-bottom:28px; }
+  .admin-card h3 { font-size:16px; font-weight:500; color:var(--verde); margin-bottom:18px; }
+  .admin-form { display:grid; grid-template-columns:1fr 120px 1fr auto; gap:14px; align-items:end; }
+  .admin-field label { display:block; font-size:12px; color:var(--verde); opacity:0.7; margin-bottom:6px; letter-spacing:0.02em; }
+  .admin-field select, .admin-field input { width:100%; padding:12px 14px; border:1px solid rgba(45,59,45,0.2); border-radius:12px; font-size:14px; font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); }
+  .admin-field select:focus, .admin-field input:focus { outline:none; border-color:var(--dorado); }
+  .btn-admin { background:var(--verde); color:var(--crema); border:none; border-radius:12px; padding:0 24px; height:46px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:background 0.2s; }
+  .btn-admin:hover { background:var(--salvia); }
+  .btn-admin:disabled { opacity:0.5; cursor:not-allowed; }
+  .admin-msg { font-size:13px; padding:12px 14px; border-radius:10px; margin-top:16px; display:none; }
+  .admin-msg.error { display:block; background:#FCEBEB; color:#A32D2D; }
+  .admin-msg.ok { display:block; background:#EAF3DE; color:#3B6D11; }
+  .codigos-result { margin-top:18px; display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+  .codigos-result:empty { margin-top:0; }
+  .codigo-chip { background:var(--crema); border:1px solid rgba(201,168,76,0.45); border-radius:10px; padding:10px 12px; font-size:14px; font-weight:500; letter-spacing:0.06em; color:var(--verde); text-align:center; }
+  .admin-filter { display:flex; gap:12px; align-items:end; margin-bottom:18px; flex-wrap:wrap; }
+  .admin-stats { font-size:13px; color:var(--verde); opacity:0.7; margin-bottom:14px; }
+  .admin-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .admin-table th { text-align:left; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--dorado); font-weight:500; padding:10px 12px; border-bottom:1px solid rgba(45,59,45,0.1); }
+  .admin-table td { padding:11px 12px; border-bottom:1px solid rgba(45,59,45,0.06); color:var(--verde); }
+  .admin-table tr:hover td { background:var(--crema); }
+  .codigo-mono { font-weight:500; letter-spacing:0.06em; }
+  .estado-libre { color:#3B6D11; font-weight:500; }
+  .estado-usado { color:#A85040; font-weight:500; }
+
   @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:768px){ nav{padding:16px 24px;} .nav-links a:not(.always){display:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;} .canjear-form input{flex:1;width:auto;} }
+  @media (max-width:768px){ nav{padding:16px 24px;} .nav-links a:not(.always){display:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;} .canjear-form input{flex:1;width:auto;} .admin-card{padding:22px 18px;} .admin-form{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -317,6 +342,42 @@
   </div>
 </div>
 
+<div id="view-admin" class="view">
+  <div class="dash">
+    <div class="dash-top">
+      <div class="dash-greet"><h2>Panel de administración</h2><p>Genera y consulta los códigos de los kits.</p></div>
+      <button class="btn-secondary" onclick="go('app')">← Mi cuenta</button>
+    </div>
+
+    <div class="admin-card">
+      <h3>Generar códigos</h3>
+      <div class="admin-form">
+        <div class="admin-field"><label>Kit</label><select id="admin-kit"></select></div>
+        <div class="admin-field"><label>Cantidad</label><input type="number" id="admin-cantidad" min="1" max="500" value="10" /></div>
+        <div class="admin-field"><label>Etiqueta de lote</label><input type="text" id="admin-lote" placeholder="Ej. Navidad-2025" /></div>
+        <button class="btn-admin" id="admin-gen-btn" onclick="generarCodigosAdmin()">Generar</button>
+      </div>
+      <div id="admin-msg" class="admin-msg"></div>
+      <div id="admin-result" class="codigos-result"></div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Códigos existentes</h3>
+      <div class="admin-filter">
+        <div class="admin-field" style="flex:1;min-width:180px;"><label>Filtrar por lote</label><input type="text" id="admin-filter-lote" placeholder="Vacío = ver todos" /></div>
+        <button class="btn-admin" onclick="cargarCodigosAdmin()">Buscar</button>
+      </div>
+      <div id="admin-stats" class="admin-stats"></div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table">
+          <thead><tr><th>Código</th><th>Kit</th><th>Lote</th><th>Estado</th></tr></thead>
+          <tbody id="admin-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="modal-overlay" class="modal-overlay">
   <div class="modal-card" id="modal-card">
     <div class="modal-confetti" id="modal-confetti"></div>
@@ -396,16 +457,21 @@
   }
 
   let currentUser = null;
+  let isAdmin = false;
+  let adminKits = [];
   function go(view){
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     document.getElementById('view-'+view).classList.add('active');
     window.scrollTo(0,0);
     renderNav(view);
+    if(view==='admin' && isAdmin){ loadAdminKits(); cargarCodigosAdmin(); }
   }
   function renderNav(view){
     const nav = document.getElementById('nav-links');
-    if(currentUser && view==='app'){ nav.innerHTML=''; }
-    else if(currentUser){ nav.innerHTML='<a class="always" onclick="go(\'app\')">Mi cuenta</a>'; }
+    const adminLink = isAdmin ? '<a class="always" onclick="go(\'admin\')">Admin</a>' : '';
+    if(currentUser && view==='admin'){ nav.innerHTML='<a class="always" onclick="go(\'app\')">Mi cuenta</a>'; }
+    else if(currentUser && view==='app'){ nav.innerHTML=adminLink; }
+    else if(currentUser){ nav.innerHTML='<a class="always" onclick="go(\'app\')">Mi cuenta</a>'+adminLink; }
     else if(view==='landing'){ nav.innerHTML='<a href="#como">Cómo funciona</a><a href="#kits">Kits</a><a href="#insignias">Insignias</a><button class="btn-nav" onclick="go(\'login\')">Acceder</button>'; }
     else { nav.innerHTML='<button class="btn-nav" onclick="go(\'landing\')">Inicio</button>'; }
   }
@@ -433,7 +499,7 @@
     if(error){ msg('login-msg','Correo o contraseña incorrectos.','error'); return; }
     enterApp();
   }
-  async function doLogout(){ await sb.auth.signOut(); currentUser=null; go('landing'); }
+  async function doLogout(){ await sb.auth.signOut(); currentUser=null; isAdmin=false; adminKits=[]; go('landing'); }
 
   async function loadMisKits(uid){
     const { data } = await sb.from('codigos').select('codigo, usado_en, kits(nombre,temporada,nivel,descripcion)').eq('usado_por', uid).order('usado_en',{ascending:false});
@@ -507,11 +573,70 @@
       c.appendChild(p); }
   }
 
+  async function checkAdmin(uid){
+    try {
+      const { data } = await sb.from('admins').select('id').eq('id', uid).maybeSingle();
+      isAdmin = !!data;
+    } catch(e){ isAdmin = false; }
+  }
+
+  async function loadAdminKits(){
+    if(adminKits.length===0){
+      const { data } = await sb.from('kits').select('id,nombre,temporada').order('nivel');
+      adminKits = data || [];
+    }
+    document.getElementById('admin-kit').innerHTML = adminKits.map(k =>
+      '<option value="'+k.id+'">'+k.nombre+' — '+k.temporada+'</option>').join('');
+  }
+
+  function amsg(t,type){ const e=document.getElementById('admin-msg'); e.textContent=t; e.className='admin-msg '+type; }
+
+  async function generarCodigosAdmin(){
+    const kitId = document.getElementById('admin-kit').value;
+    const cantidad = parseInt(document.getElementById('admin-cantidad').value,10);
+    const lote = document.getElementById('admin-lote').value.trim();
+    document.getElementById('admin-result').innerHTML='';
+    if(!kitId){ amsg('Elige un kit.','error'); return; }
+    if(!cantidad || cantidad<1 || cantidad>500){ amsg('La cantidad debe estar entre 1 y 500.','error'); return; }
+    if(!lote){ amsg('Pon una etiqueta de lote (ej. Navidad-2025).','error'); return; }
+    const btn=document.getElementById('admin-gen-btn'); btn.disabled=true; btn.textContent='Generando...';
+    const { data, error } = await sb.rpc('generar_codigos', { p_kit_id:kitId, p_cantidad:cantidad, p_lote:lote });
+    btn.disabled=false; btn.textContent='Generar';
+    if(error){
+      const m={ no_autorizado:'No tienes permiso para generar códigos.', cantidad_invalida:'Cantidad no válida (1-500).', kit_invalido:'El kit seleccionado no existe.' };
+      amsg(m[error.message] || 'Error al generar. Inténtalo de nuevo.','error'); return;
+    }
+    const codigos=(data||[]).map(r=>r.codigo);
+    amsg('✓ '+codigos.length+' códigos generados en el lote "'+lote+'".','ok');
+    document.getElementById('admin-result').innerHTML = codigos.map(c=>'<div class="codigo-chip">'+c+'</div>').join('');
+    document.getElementById('admin-filter-lote').value = lote;
+    cargarCodigosAdmin();
+  }
+
+  async function cargarCodigosAdmin(){
+    const lote = document.getElementById('admin-filter-lote').value.trim();
+    let q = sb.from('codigos').select('codigo,lote,usado,kits(nombre)').order('creado_en',{ascending:false}).limit(500);
+    if(lote){ q = q.eq('lote', lote); }
+    const { data, error } = await q;
+    const tbody=document.getElementById('admin-tbody');
+    const stats=document.getElementById('admin-stats');
+    if(error || !data){ tbody.innerHTML=''; stats.textContent='No se pudieron cargar los códigos.'; return; }
+    if(data.length===0){ tbody.innerHTML=''; stats.textContent='No hay códigos'+(lote?' en el lote "'+lote+'".':' todavía.'); return; }
+    const total=data.length, usados=data.filter(r=>r.usado).length, libres=total-usados;
+    stats.textContent = total+' códigos · '+libres+' libres · '+usados+' canjeados';
+    tbody.innerHTML = data.map(r=>{
+      const kit = r.kits ? r.kits.nombre : '—';
+      return '<tr><td class="codigo-mono">'+r.codigo+'</td><td>'+kit+'</td><td>'+(r.lote||'—')+'</td>'+
+        '<td>'+(r.usado?'<span class="estado-usado">Canjeado</span>':'<span class="estado-libre">Libre</span>')+'</td></tr>';
+    }).join('');
+  }
+
   async function enterApp(){
     const { data:{ user } } = await sb.auth.getUser();
     currentUser = user;
     const nombre = (user.user_metadata && user.user_metadata.nombre) || 'Kreador';
     document.getElementById('greet-name').textContent = 'Hola, '+nombre+' 👋';
+    await checkAdmin(user.id);
     go('app');
     await loadMisKits(user.id);
     await loadMisBadges(user.id);
