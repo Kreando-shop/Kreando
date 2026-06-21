@@ -152,6 +152,25 @@
   .badge-card .bname { font-size:13px; font-weight:500; color:var(--verde); }
   .badge-card .bdesc { font-size:11px; color:var(--verde); opacity:0.6; line-height:1.4; }
 
+  .modal-overlay { position:fixed; inset:0; background:rgba(45,59,45,0.55); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:1000; padding:24px; }
+  .modal-overlay.show { display:flex; }
+  .modal-card { position:relative; background:var(--blanco); border-radius:28px; padding:46px 36px 32px; width:100%; max-width:380px; text-align:center; overflow:hidden; animation:cardPop 0.45s cubic-bezier(0.2,0.9,0.3,1.3); }
+  @keyframes cardPop { 0%{transform:scale(0.82);opacity:0;} 100%{transform:scale(1);opacity:1;} }
+  .modal-confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1; }
+  .confetti-piece { position:absolute; width:9px; height:9px; top:-14px; }
+  @keyframes confettiFall { 0%{transform:translateY(-14px) rotate(0);opacity:1;} 100%{transform:translateY(420px) rotate(380deg);opacity:0;} }
+  .modal-visual, .modal-eyebrow, .modal-title, .modal-text, .modal-btn { position:relative; z-index:2; }
+  .modal-visual { display:flex; align-items:center; justify-content:center; margin-bottom:20px; min-height:130px; }
+  .modal-visual.badge svg { width:130px; height:auto; animation:badgePop 0.7s cubic-bezier(0.2,0.9,0.3,1.4) 0.08s both; }
+  .modal-visual .kiticon { width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; animation:badgePop 0.6s cubic-bezier(0.2,0.9,0.3,1.4) 0.08s both; }
+  .modal-visual .kiticon svg { width:72px; height:72px; }
+  @keyframes badgePop { 0%{transform:scale(0) rotate(-18deg);} 60%{transform:scale(1.14) rotate(6deg);} 100%{transform:scale(1) rotate(0);} }
+  .modal-eyebrow { font-size:11px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--dorado); margin-bottom:8px; }
+  .modal-title { font-size:24px; font-weight:600; color:var(--verde); margin-bottom:8px; letter-spacing:-0.01em; }
+  .modal-text { font-size:14px; color:var(--verde); opacity:0.65; margin-bottom:26px; line-height:1.6; }
+  .modal-btn { background:var(--verde); color:var(--crema); border:none; border-radius:99px; padding:13px 34px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:background 0.2s; }
+  .modal-btn:hover { background:var(--salvia); }
+
   @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} }
   @media (max-width:768px){ nav{padding:16px 24px;} .nav-links a:not(.always){display:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;} .canjear-form input{flex:1;width:auto;} }
 </style>
@@ -298,6 +317,17 @@
   </div>
 </div>
 
+<div id="modal-overlay" class="modal-overlay">
+  <div class="modal-card" id="modal-card">
+    <div class="modal-confetti" id="modal-confetti"></div>
+    <div class="modal-visual" id="modal-visual"></div>
+    <div class="modal-eyebrow" id="modal-eyebrow"></div>
+    <h2 class="modal-title" id="modal-title"></h2>
+    <p class="modal-text" id="modal-text"></p>
+    <button class="modal-btn" id="modal-btn" onclick="nextModalStep()">Continuar</button>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://wcbhnnjvneawwmtxvszy.supabase.co';
@@ -428,10 +458,53 @@
       const m = { no_autenticado:'Debes iniciar sesión.', codigo_usado:'Este código ya ha sido canjeado.', codigo_invalido:'Código no válido. Revísalo e inténtalo de nuevo.' };
       cmsg((data && m[data.error]) || 'No se ha podido canjear.','error'); return;
     }
-    cmsg('¡Has desbloqueado "'+data.kit_nombre+'"! 🎉','ok');
+    cmsg('','ok'); document.getElementById('canjear-msg').className='canjear-msg';
     input.value='';
     const { data:{ user } } = await sb.auth.getUser();
     await loadMisKits(user.id); await loadMisBadges(user.id);
+    const steps = [];
+    (data.insignias_nuevas || []).forEach(lvl => { const b = BADGES.find(x=>x.lvl===lvl); if(b) steps.push({type:'badge', badge:b}); });
+    steps.push({ type:'recipe', kit_nombre:data.kit_nombre, kit_temporada:data.kit_temporada });
+    openModalQueue(steps);
+  }
+
+  let modalQueue=[], modalIdx=0;
+  function openModalQueue(steps){ modalQueue=steps; modalIdx=0; document.getElementById('modal-overlay').classList.add('show'); showModalStep(); }
+  function showModalStep(){
+    const s=modalQueue[modalIdx];
+    const card=document.getElementById('modal-card');
+    card.style.animation='none'; void card.offsetWidth; card.style.animation='';
+    const visual=document.getElementById('modal-visual');
+    const last = modalIdx===modalQueue.length-1;
+    if(s.type==='badge'){
+      visual.className='modal-visual badge';
+      visual.innerHTML='<svg width="130" viewBox="0 0 90 108" fill="none">'+s.badge.svg+'</svg>';
+      document.getElementById('modal-eyebrow').textContent='Insignia desbloqueada';
+      document.getElementById('modal-title').textContent=s.badge.name;
+      document.getElementById('modal-text').textContent=s.badge.desc;
+    } else {
+      visual.className='modal-visual recipe';
+      visual.innerHTML='<div class="kiticon" style="background:'+kitBg(s.kit_temporada)+';"><svg viewBox="0 0 52 52" fill="none">'+kitIcon(s.kit_temporada)+'</svg></div>';
+      document.getElementById('modal-eyebrow').textContent='Receta desbloqueada';
+      document.getElementById('modal-title').textContent=s.kit_nombre;
+      document.getElementById('modal-text').textContent='Ya puedes ver la receta paso a paso en tus kits.';
+    }
+    document.getElementById('modal-btn').textContent = last ? '¡Genial!' : 'Continuar';
+    launchConfetti();
+  }
+  function nextModalStep(){
+    modalIdx++;
+    if(modalIdx>=modalQueue.length){ document.getElementById('modal-overlay').classList.remove('show'); return; }
+    showModalStep();
+  }
+  function launchConfetti(){
+    const c=document.getElementById('modal-confetti'); c.innerHTML='';
+    const colors=['#D4857A','#C9A84C','#6B8F6B','#E8958A','#F0C040'];
+    for(let i=0;i<16;i++){ const p=document.createElement('div'); p.className='confetti-piece';
+      p.style.left=(Math.random()*100)+'%'; p.style.background=colors[i%colors.length];
+      p.style.borderRadius=Math.random()>0.5?'50%':'2px';
+      p.style.animation='confettiFall '+(1.4+Math.random()*0.8).toFixed(2)+'s ease-in '+(Math.random()*0.3).toFixed(2)+'s forwards';
+      c.appendChild(p); }
   }
 
   async function enterApp(){
