@@ -16,9 +16,29 @@
   .nav-logo { font-size:18px; font-weight:600; letter-spacing:0.12em; color:var(--verde); cursor:pointer; }
   .nav-logo span { color:var(--dorado); }
   .nav-tagline { font-size:10px; font-weight:300; letter-spacing:0.2em; color:var(--dorado); text-transform:uppercase; margin-top:2px; }
-  .nav-links { display:flex; gap:32px; align-items:center; }
+  .nav-links { display:flex; gap:26px; align-items:center; }
   .nav-links a { font-size:13px; font-weight:400; color:var(--verde); text-decoration:none; letter-spacing:0.04em; opacity:0.7; cursor:pointer; transition:opacity 0.2s; }
   .nav-links a:hover { opacity:1; }
+  .nav-links a.scan-link { color:var(--dorado); opacity:1; font-weight:500; display:inline-flex; align-items:center; gap:6px; }
+  .nav-toggle { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:6px; }
+  .nav-toggle span { display:block; width:24px; height:2px; background:var(--verde); border-radius:2px; transition:transform 0.25s, opacity 0.25s; }
+  .nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2){ opacity:0; }
+  .nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  .scanner-overlay { position:fixed; inset:0; background:rgba(45,59,45,0.72); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:1100; padding:24px; }
+  .scanner-overlay.show { display:flex; }
+  .scanner-card { background:var(--blanco); border-radius:24px; padding:24px; width:100%; max-width:380px; }
+  .scanner-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .scanner-head h3 { font-size:16px; font-weight:500; color:var(--verde); }
+  .scanner-close { background:none; border:none; font-size:22px; color:var(--verde); cursor:pointer; opacity:0.55; line-height:1; padding:0 4px; }
+  .scanner-close:hover { opacity:1; }
+  #qr-reader { width:100%; border-radius:16px; overflow:hidden; background:var(--crema2); }
+  #qr-reader video { border-radius:16px; }
+  .scanner-hint { font-size:13px; color:var(--verde); opacity:0.65; text-align:center; margin-top:14px; line-height:1.5; }
+  .confirm-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .modal-btn.ghost { background:transparent; color:var(--verde); border:1.5px solid var(--verde); }
+  .modal-btn.ghost:hover { background:var(--verde); color:var(--crema); }
   .btn-nav { font-family:'Poppins',sans-serif; font-size:13px; font-weight:500; background:var(--verde); color:var(--crema); border:none; border-radius:99px; padding:10px 24px; cursor:pointer; letter-spacing:0.04em; transition:background 0.2s, transform 0.15s; }
   .btn-nav:hover { background:var(--salvia); transform:scale(1.02); }
 
@@ -197,7 +217,7 @@
   .estado-usado { color:#A85040; font-weight:500; }
 
   @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:768px){ nav{padding:16px 24px;} .nav-links a:not(.always){display:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;} .canjear-form input{flex:1;width:auto;} .admin-card{padding:22px 18px;} .admin-form{grid-template-columns:1fr;} }
+  @media (max-width:768px){ nav{padding:16px 24px;} .nav-toggle{display:flex;} .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--crema);border-bottom:1px solid rgba(45,59,45,0.08);padding:0 24px;max-height:0;overflow:hidden;transition:max-height 0.3s ease;} .nav-links.open{max-height:80vh;padding:8px 24px 18px;} .nav-links a,.nav-links .btn-nav{width:100%;padding:15px 4px;border-bottom:1px solid rgba(45,59,45,0.06);text-align:left;border-radius:0;font-size:15px;} .nav-links .btn-nav{background:none;color:var(--verde);font-weight:500;} .nav-links a:last-child,.nav-links .btn-nav:last-child{border-bottom:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;} .canjear-form input{flex:1;width:auto;} .admin-card{padding:22px 18px;} .admin-form{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -207,6 +227,9 @@
     <div class="nav-logo">KRE<span>A</span>NDO</div>
     <div class="nav-tagline">Sorpresas que se saborean</div>
   </div>
+  <button class="nav-toggle" id="nav-toggle" onclick="toggleMenu()" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-links" id="nav-links"></div>
 </nav>
 
@@ -378,6 +401,29 @@
   </div>
 </div>
 
+<div id="scanner-overlay" class="scanner-overlay">
+  <div class="scanner-card">
+    <div class="scanner-head">
+      <h3>Escanea el QR de tu caja</h3>
+      <button class="scanner-close" onclick="closeScanner()" aria-label="Cerrar">✕</button>
+    </div>
+    <div id="qr-reader"></div>
+    <p class="scanner-hint" id="scanner-hint">Apunta la cámara al código QR de tu kit.</p>
+  </div>
+</div>
+
+<div id="confirm-overlay" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-eyebrow">Canjear kit</div>
+    <h2 class="modal-title" id="confirm-code">KRE-XXXX-XXXX</h2>
+    <p class="modal-text">¿Quieres canjear este código y desbloquear tu receta e insignia?</p>
+    <div class="confirm-actions">
+      <button class="modal-btn" id="confirm-yes" onclick="confirmarCanjeo()">Canjear ahora</button>
+      <button class="modal-btn ghost" onclick="closeConfirm()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-overlay" class="modal-overlay">
   <div class="modal-card" id="modal-card">
     <div class="modal-confetti" id="modal-confetti"></div>
@@ -390,6 +436,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
   const SUPABASE_URL = 'https://wcbhnnjvneawwmtxvszy.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_XR7RQHuCQx7YStCR531BGQ_0XSvKgy9';
@@ -459,7 +506,23 @@
   let currentUser = null;
   let isAdmin = false;
   let adminKits = [];
+  let pendingScan = false;
+
+  function toggleMenu(){
+    document.getElementById('nav-links').classList.toggle('open');
+    document.getElementById('nav-toggle').classList.toggle('open');
+  }
+  function closeMenu(){
+    document.getElementById('nav-links').classList.remove('open');
+    document.getElementById('nav-toggle').classList.remove('open');
+  }
+  function goSection(id){
+    go('landing');
+    setTimeout(()=>{ const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); }, 80);
+  }
+
   function go(view){
+    closeMenu();
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     document.getElementById('view-'+view).classList.add('active');
     window.scrollTo(0,0);
@@ -468,12 +531,19 @@
   }
   function renderNav(view){
     const nav = document.getElementById('nav-links');
-    const adminLink = isAdmin ? '<a class="always" onclick="go(\'admin\')">Admin</a>' : '';
-    if(currentUser && view==='admin'){ nav.innerHTML='<a class="always" onclick="go(\'app\')">Mi cuenta</a>'; }
-    else if(currentUser && view==='app'){ nav.innerHTML=adminLink; }
-    else if(currentUser){ nav.innerHTML='<a class="always" onclick="go(\'app\')">Mi cuenta</a>'+adminLink; }
-    else if(view==='landing'){ nav.innerHTML='<a href="#como">Cómo funciona</a><a href="#kits">Kits</a><a href="#insignias">Insignias</a><button class="btn-nav" onclick="go(\'login\')">Acceder</button>'; }
-    else { nav.innerHTML='<button class="btn-nav" onclick="go(\'landing\')">Inicio</button>'; }
+    let html = '';
+    html += '<a onclick="go(\'landing\')">Inicio</a>';
+    html += '<a onclick="goSection(\'kits\')">Kits</a>';
+    html += '<a onclick="goSection(\'insignias\')">Insignias</a>';
+    html += '<a class="scan-link" onclick="openScanner()">⊡ Escanear QR</a>';
+    if(currentUser){
+      html += '<a onclick="go(\'app\')">Mi cuenta</a>';
+      if(isAdmin){ html += '<a onclick="go(\'admin\')">Admin</a>'; }
+      html += '<a onclick="doLogout()">Cerrar sesión</a>';
+    } else {
+      html += '<button class="btn-nav" onclick="go(\'login\')">Acceder</button>';
+    }
+    nav.innerHTML = html;
     updateLandingCTAs();
   }
   function ctaCuenta(){ go(currentUser ? 'app' : 'registro'); }
@@ -519,26 +589,98 @@
   }
 
   function cmsg(t,type){ const e=document.getElementById('canjear-msg'); e.textContent=t; e.className='canjear-msg '+type; }
-  async function canjearCodigo(){
-    const input=document.getElementById('codigo-input');
-    const code=input.value.trim().toUpperCase();
-    if(!code){ cmsg('Introduce un código.','error'); return; }
-    const btn=document.getElementById('canjear-btn'); btn.disabled=true; btn.textContent='Canjeando...';
+
+  // Lógica central de canjeo, reutilizada por el formulario manual y por el escáner QR
+  async function procesarCanjeo(code){
     const { data, error } = await sb.rpc('canjear_codigo', { p_codigo: code });
-    btn.disabled=false; btn.textContent='Canjear';
-    if(error){ cmsg('Ha ocurrido un error. Inténtalo de nuevo.','error'); return; }
+    if(error){ return { ok:false, msg:'Ha ocurrido un error. Inténtalo de nuevo.' }; }
     if(!data || !data.ok){
       const m = { no_autenticado:'Debes iniciar sesión.', codigo_usado:'Este código ya ha sido canjeado.', codigo_invalido:'Código no válido. Revísalo e inténtalo de nuevo.' };
-      cmsg((data && m[data.error]) || 'No se ha podido canjear.','error'); return;
+      return { ok:false, msg:(data && m[data.error]) || 'No se ha podido canjear.' };
     }
-    cmsg('','ok'); document.getElementById('canjear-msg').className='canjear-msg';
-    input.value='';
     const { data:{ user } } = await sb.auth.getUser();
     await loadMisKits(user.id); await loadMisBadges(user.id);
     const steps = [];
     (data.insignias_nuevas || []).forEach(lvl => { const b = BADGES.find(x=>x.lvl===lvl); if(b) steps.push({type:'badge', badge:b}); });
     steps.push({ type:'recipe', kit_nombre:data.kit_nombre, kit_temporada:data.kit_temporada });
     openModalQueue(steps);
+    return { ok:true };
+  }
+
+  async function canjearCodigo(){
+    const input=document.getElementById('codigo-input');
+    const code=input.value.trim().toUpperCase();
+    if(!code){ cmsg('Introduce un código.','error'); return; }
+    const btn=document.getElementById('canjear-btn'); btn.disabled=true; btn.textContent='Canjeando...';
+    const res = await procesarCanjeo(code);
+    btn.disabled=false; btn.textContent='Canjear';
+    if(!res.ok){ cmsg(res.msg,'error'); return; }
+    cmsg('','ok'); document.getElementById('canjear-msg').className='canjear-msg';
+    input.value='';
+  }
+
+  // ---- Escáner QR ----
+  let qrScanner = null;
+  function extraerCodigo(texto){
+    if(!texto) return null;
+    texto = texto.trim();
+    const enlace = texto.match(/canjear=([A-Za-z0-9\-]+)/i);
+    if(enlace){ return enlace[1].toUpperCase(); }
+    const suelto = texto.match(/KRE-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}/i);
+    if(suelto){ return suelto[0].toUpperCase(); }
+    return null;
+  }
+  function shint(t){ document.getElementById('scanner-hint').textContent = t; }
+  async function openScanner(){
+    closeMenu();
+    if(!currentUser){ pendingScan = true; go('login'); msg('login-msg','Inicia sesión para escanear y canjear tu kit.','ok'); return; }
+    if(typeof Html5Qrcode === 'undefined'){ document.getElementById('scanner-overlay').classList.add('show'); shint('No se pudo cargar el lector. Recarga la página e inténtalo de nuevo.'); return; }
+    document.getElementById('scanner-overlay').classList.add('show');
+    shint('Apunta la cámara al código QR de tu kit.');
+    try {
+      qrScanner = new Html5Qrcode('qr-reader');
+      await qrScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 230, height: 230 } },
+        onScanOk,
+        () => {}
+      );
+    } catch(e){
+      shint('No se pudo acceder a la cámara. Revisa que has dado permiso en el navegador.');
+    }
+  }
+  function onScanOk(textoLeido){
+    const code = extraerCodigo(textoLeido);
+    if(!code){ shint('Ese QR no parece un código Kreando. Prueba con otro.'); return; }
+    stopScanner();
+    closeScanner();
+    pedirConfirmacion(code);
+  }
+  async function stopScanner(){
+    if(qrScanner){
+      try { await qrScanner.stop(); await qrScanner.clear(); } catch(e){}
+      qrScanner = null;
+    }
+  }
+  function closeScanner(){ stopScanner(); document.getElementById('scanner-overlay').classList.remove('show'); }
+
+  // ---- Confirmación antes de canjear ----
+  let pendingCode = null;
+  function pedirConfirmacion(code){
+    pendingCode = code;
+    document.getElementById('confirm-code').textContent = code;
+    document.getElementById('confirm-overlay').classList.add('show');
+  }
+  function closeConfirm(){ document.getElementById('confirm-overlay').classList.remove('show'); pendingCode = null; }
+  async function confirmarCanjeo(){
+    if(!pendingCode) return;
+    const code = pendingCode;
+    const btn = document.getElementById('confirm-yes'); btn.disabled = true; btn.textContent = 'Canjeando...';
+    const res = await procesarCanjeo(code);
+    btn.disabled = false; btn.textContent = 'Canjear ahora';
+    closeConfirm();
+    if(!document.getElementById('view-app').classList.contains('active') && res.ok){ /* los popups ya se muestran encima */ }
+    if(!res.ok){ go('app'); cmsg(res.msg,'error'); }
   }
 
   let modalQueue=[], modalIdx=0;
@@ -647,6 +789,7 @@
     go('app');
     await loadMisKits(user.id);
     await loadMisBadges(user.id);
+    if(pendingScan){ pendingScan = false; setTimeout(openScanner, 300); }
   }
 
   (async function(){
