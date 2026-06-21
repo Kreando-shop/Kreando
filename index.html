@@ -439,7 +439,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
   const SUPABASE_URL = 'https://wcbhnnjvneawwmtxvszy.supabase.co';
@@ -810,19 +810,30 @@
   }
 
   function generarQRCanvas(url){
-    return new Promise((resolve,reject)=>{
-      const canvas=document.createElement('canvas');
-      QRCode.toCanvas(canvas, url, { errorCorrectionLevel:'H', margin:1, width:620,
-        color:{ dark:'#2D3B2D', light:'#ffffff' } }, (err)=>{
-        if(err){ reject(err); return; }
-        dibujarLogoEnQR(canvas.getContext('2d'), canvas.width);
-        resolve(canvas);
-      });
-    });
+    const qr = qrcode(0, 'H');          // 0 = versión automática, H = corrección alta
+    qr.addData(url);
+    qr.make();
+    const count = qr.getModuleCount();
+    const margin = 4;                   // módulos de margen blanco
+    const cell = Math.max(6, Math.floor(600/(count+margin*2)));
+    const size = cell*(count+margin*2);
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,size,size);
+    ctx.fillStyle = '#2D3B2D';
+    for(let r=0;r<count;r++){
+      for(let c=0;c<count;c++){
+        if(qr.isDark(r,c)){ ctx.fillRect((margin+c)*cell, (margin+r)*cell, cell, cell); }
+      }
+    }
+    dibujarLogoEnQR(ctx, size);
+    return canvas;
   }
 
   async function descargarQRsPDF(){
-    if(typeof QRCode==='undefined' || !window.jspdf){ pdfmsg('Las librerías no se cargaron. Recarga la página (Ctrl+F5).','error'); return; }
+    if(typeof qrcode==='undefined'){ pdfmsg('No se cargó el generador de QR. Recarga la página (Ctrl+F5) e inténtalo de nuevo.','error'); return; }
+    if(!window.jspdf){ pdfmsg('No se cargó el generador de PDF. Recarga la página (Ctrl+F5) e inténtalo de nuevo.','error'); return; }
     const codes = codigosCargados.map(r=>r.codigo);
     if(codes.length===0){ pdfmsg('No hay códigos en la lista. Pulsa "Buscar" primero (puedes filtrar por lote).','error'); return; }
     if(codes.length>120 && !confirm('Vas a generar '+codes.length+' QRs (varias páginas). Puede tardar un poco. ¿Continuar?')){ return; }
