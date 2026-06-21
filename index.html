@@ -160,6 +160,8 @@
   .canjear-form .btn-canjear { background:var(--dorado); color:var(--verde); border:none; border-radius:12px; padding:0 26px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:opacity 0.2s; }
   .canjear-form .btn-canjear:hover { opacity:0.88; }
   .canjear-form .btn-canjear:disabled { opacity:0.5; cursor:not-allowed; }
+  .canjear-form .btn-scan { background:var(--salvia); color:var(--crema); border:none; border-radius:12px; padding:0 20px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:opacity 0.2s; white-space:nowrap; }
+  .canjear-form .btn-scan:hover { opacity:0.88; }
   .canjear-msg { width:100%; font-size:13px; margin:0; display:none; }
   .canjear-msg.error { display:block; color:#F0997B; padding-top:6px; }
   .canjear-msg.ok { display:block; color:#9FE1CB; padding-top:6px; }
@@ -353,6 +355,7 @@
       <div class="canjear-form">
         <input type="text" id="codigo-input" placeholder="KRE-XXXX-XXXX" />
         <button class="btn-canjear" id="canjear-btn" onclick="canjearCodigo()">Canjear</button>
+        <button class="btn-scan" id="canjear-scan-btn" onclick="openScanner()">⊡ Escanear</button>
       </div>
       <div id="canjear-msg" class="canjear-msg"></div>
     </div>
@@ -511,6 +514,7 @@
   let isAdmin = false;
   let adminKits = [];
   let pendingScan = false;
+  let pendingCanjeoCode = null;
 
   function toggleMenu(){
     document.getElementById('nav-links').classList.toggle('open');
@@ -605,7 +609,8 @@
     const { data:{ user } } = await sb.auth.getUser();
     await loadMisKits(user.id); await loadMisBadges(user.id);
     const steps = [];
-    (data.insignias_nuevas || []).forEach(lvl => { const b = BADGES.find(x=>x.lvl===lvl); if(b) steps.push({type:'badge', badge:b}); });
+    const nivelesNuevos = [...new Set(data.insignias_nuevas || [])];
+    nivelesNuevos.forEach(lvl => { const b = BADGES.find(x=>x.lvl===lvl); if(b) steps.push({type:'badge', badge:b}); });
     steps.push({ type:'recipe', kit_nombre:data.kit_nombre, kit_temporada:data.kit_temporada });
     openModalQueue(steps);
     return { ok:true };
@@ -891,13 +896,35 @@
     await loadMisKits(user.id);
     await loadMisBadges(user.id);
     if(pendingScan){ pendingScan = false; setTimeout(openScanner, 300); }
+    if(pendingCanjeoCode){ const c=pendingCanjeoCode; pendingCanjeoCode=null; setTimeout(()=>pedirConfirmacion(c), 350); }
+  }
+
+  // Lee el código del enlace (?canjear=KRE-XXXX-XXXX) al abrir la web desde un QR
+  function leerCodigoDeURL(){
+    const params = new URLSearchParams(window.location.search);
+    let code = params.get('canjear');
+    if(!code) return null;
+    code = code.trim().toUpperCase();
+    history.replaceState(null, '', window.location.pathname); // limpia la URL para no repetir al recargar
+    return code;
   }
 
   (async function(){
     renderLandingKits();
     renderLandingBadges();
+    const codigoURL = leerCodigoDeURL();
     const { data:{ session } } = await sb.auth.getSession();
-    if(session){ await enterApp(); } else { renderNav('landing'); }
+    if(session){
+      await enterApp();
+      if(codigoURL){ setTimeout(()=>pedirConfirmacion(codigoURL), 350); }
+    } else {
+      renderNav('landing');
+      if(codigoURL){
+        pendingCanjeoCode = codigoURL;
+        go('login');
+        msg('login-msg','Inicia sesión para canjear tu kit.','ok');
+      }
+    }
   })();
 </script>
 </body>
