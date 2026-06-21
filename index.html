@@ -389,7 +389,9 @@
       <div class="admin-filter">
         <div class="admin-field" style="flex:1;min-width:180px;"><label>Filtrar por lote</label><input type="text" id="admin-filter-lote" placeholder="Vacío = ver todos" /></div>
         <button class="btn-admin" onclick="cargarCodigosAdmin()">Buscar</button>
+        <button class="btn-admin" id="admin-pdf-btn" style="background:var(--dorado);color:var(--verde);" onclick="descargarQRsPDF()">⤓ Descargar QRs (PDF)</button>
       </div>
+      <div id="admin-pdf-msg" class="admin-msg"></div>
       <div id="admin-stats" class="admin-stats"></div>
       <div style="overflow-x:auto;">
         <table class="admin-table">
@@ -437,6 +439,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
   const SUPABASE_URL = 'https://wcbhnnjvneawwmtxvszy.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_XR7RQHuCQx7YStCR531BGQ_0XSvKgy9';
@@ -762,6 +766,7 @@
     cargarCodigosAdmin();
   }
 
+  let codigosCargados = [];
   async function cargarCodigosAdmin(){
     const lote = document.getElementById('admin-filter-lote').value.trim();
     let q = sb.from('codigos').select('codigo,lote,usado,kits(nombre)').order('creado_en',{ascending:false}).limit(500);
@@ -769,6 +774,7 @@
     const { data, error } = await q;
     const tbody=document.getElementById('admin-tbody');
     const stats=document.getElementById('admin-stats');
+    codigosCargados = data || [];
     if(error || !data){ tbody.innerHTML=''; stats.textContent='No se pudieron cargar los códigos.'; return; }
     if(data.length===0){ tbody.innerHTML=''; stats.textContent='No hay códigos'+(lote?' en el lote "'+lote+'".':' todavía.'); return; }
     const total=data.length, usados=data.filter(r=>r.usado).length, libres=total-usados;
@@ -778,6 +784,90 @@
       return '<tr><td class="codigo-mono">'+r.codigo+'</td><td>'+kit+'</td><td>'+(r.lote||'—')+'</td>'+
         '<td>'+(r.usado?'<span class="estado-usado">Canjeado</span>':'<span class="estado-libre">Libre</span>')+'</td></tr>';
     }).join('');
+  }
+
+  function pdfmsg(t,type){ const e=document.getElementById('admin-pdf-msg'); e.textContent=t; e.className='admin-msg '+type; }
+
+  // Dibuja el isotipo de Kreando (círculo crema + aro dorado + K) en el centro del QR
+  function dibujarLogoEnQR(ctx, size){
+    const cx=size/2, cy=size/2;
+    const r=size*0.11;          // radio del círculo del logo (~22% de diámetro)
+    const pad=r*0.30;
+    // recuadro blanco de respaldo
+    ctx.fillStyle='#ffffff';
+    const s=r+pad;
+    if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(cx-s, cy-s, s*2, s*2, s*0.32); ctx.fill(); }
+    else { ctx.fillRect(cx-s, cy-s, s*2, s*2); }
+    // círculo crema
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle='#F5F0E8'; ctx.fill();
+    // aro dorado
+    ctx.lineWidth=r*0.12; ctx.strokeStyle='#C9A84C';
+    ctx.beginPath(); ctx.arc(cx,cy,r-ctx.lineWidth/2,0,Math.PI*2); ctx.stroke();
+    // letra K
+    ctx.fillStyle='#2D3B2D'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='600 '+(r*1.25)+'px Poppins, sans-serif';
+    ctx.fillText('K', cx, cy + r*0.04);
+  }
+
+  function generarQRCanvas(url){
+    return new Promise((resolve,reject)=>{
+      const canvas=document.createElement('canvas');
+      QRCode.toCanvas(canvas, url, { errorCorrectionLevel:'H', margin:1, width:620,
+        color:{ dark:'#2D3B2D', light:'#ffffff' } }, (err)=>{
+        if(err){ reject(err); return; }
+        dibujarLogoEnQR(canvas.getContext('2d'), canvas.width);
+        resolve(canvas);
+      });
+    });
+  }
+
+  async function descargarQRsPDF(){
+    if(typeof QRCode==='undefined' || !window.jspdf){ pdfmsg('Las librerías no se cargaron. Recarga la página (Ctrl+F5).','error'); return; }
+    const codes = codigosCargados.map(r=>r.codigo);
+    if(codes.length===0){ pdfmsg('No hay códigos en la lista. Pulsa "Buscar" primero (puedes filtrar por lote).','error'); return; }
+    if(codes.length>120 && !confirm('Vas a generar '+codes.length+' QRs (varias páginas). Puede tardar un poco. ¿Continuar?')){ return; }
+
+    const btn=document.getElementById('admin-pdf-btn'); btn.disabled=true;
+    try { await document.fonts.load("600 40px Poppins"); } catch(e){}
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit:'mm', format:'a4' });
+    const PAGE_W=210, COLS=3, ROWS=4, CELL=65;
+    const MX=(PAGE_W-COLS*CELL)/2, MY=(297-ROWS*CELL)/2;
+    const perPage=COLS*ROWS;
+    const lote = document.getElementById('admin-filter-lote').value.trim();
+
+    for(let i=0;i<codes.length;i++){
+      const code=codes[i];
+      const idx=i%perPage;
+      if(i>0 && idx===0){ pdf.addPage(); }
+      const col=idx%COLS, row=Math.floor(idx/COLS);
+      const x=MX+col*CELL, y=MY+row*CELL;
+
+      // marco de recorte (línea fina discontinua)
+      pdf.setDrawColor(205,205,205); pdf.setLineWidth(0.2); pdf.setLineDashPattern([1,1],0);
+      pdf.rect(x, y, CELL, CELL); pdf.setLineDashPattern([],0);
+
+      // "KREANDO" pequeño y discreto arriba
+      pdf.setFont('helvetica','bold'); pdf.setFontSize(8); pdf.setTextColor(45,59,45);
+      pdf.text('KREANDO', x+CELL/2, y+7, { align:'center', charSpace:0.8 });
+
+      // QR centrado
+      const canvas=await generarQRCanvas('https://kreando.shop/?canjear='+code);
+      const QS=44, qx=x+(CELL-QS)/2, qy=y+10;
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', qx, qy, QS, QS);
+
+      // código en texto debajo
+      pdf.setFont('courier','bold'); pdf.setFontSize(11); pdf.setTextColor(45,59,45);
+      pdf.text(code, x+CELL/2, qy+QS+7, { align:'center' });
+
+      if(i%6===0){ pdfmsg('Generando QRs… '+(i+1)+' / '+codes.length,'ok'); await new Promise(r=>setTimeout(r,0)); }
+    }
+
+    const nombre = 'kreando-qr'+(lote?'-'+lote.replace(/[^A-Za-z0-9\-]/g,'') : '')+'.pdf';
+    pdf.save(nombre);
+    pdfmsg('✓ Hoja de QRs generada ('+codes.length+' códigos). Revisa tu carpeta de descargas.','ok');
+    btn.disabled=false;
   }
 
   async function enterApp(){
