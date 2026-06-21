@@ -7,18 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --verde:#2D3B2D; --salvia:#6B8F6B; --rosa:#D4857A;
-    --dorado:#C9A84C; --crema:#F5F0E8; --crema2:#EDE8DF; --blanco:#FDFCFA;
-  }
+  :root { --verde:#2D3B2D; --salvia:#6B8F6B; --rosa:#D4857A; --dorado:#C9A84C; --crema:#F5F0E8; --crema2:#EDE8DF; --blanco:#FDFCFA; }
   html { scroll-behavior: smooth; }
   body { font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); font-size:16px; line-height:1.7; }
+  .view { display:none; } .view.active { display:block; }
 
-  .view { display: none; }
-  .view.active { display: block; }
-
-  /* NAV */
-  nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 60px; background:rgba(245,240,232,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(45,59,45,0.08); }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 60px; background:rgba(245,240,232,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(45,59,45,0.08); }
   .nav-logo { font-size:18px; font-weight:600; letter-spacing:0.12em; color:var(--verde); cursor:pointer; }
   .nav-logo span { color:var(--dorado); }
   .nav-tagline { font-size:10px; font-weight:300; letter-spacing:0.2em; color:var(--dorado); text-transform:uppercase; margin-top:2px; }
@@ -28,7 +22,6 @@
   .btn-nav { font-family:'Poppins',sans-serif; font-size:13px; font-weight:500; background:var(--verde); color:var(--crema); border:none; border-radius:99px; padding:10px 24px; cursor:pointer; letter-spacing:0.04em; transition:background 0.2s, transform 0.15s; }
   .btn-nav:hover { background:var(--salvia); transform:scale(1.02); }
 
-  /* HERO */
   .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:140px 40px 80px; position:relative; overflow:hidden; }
   .hero-confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
   .dot { position:absolute; border-radius:50%; animation:float 6s ease-in-out infinite; }
@@ -78,10 +71,8 @@
   .kit-img { height:150px; display:flex; align-items:center; justify-content:center; position:relative; }
   .kit-img svg { width:76px; height:76px; }
   .kit-badge { position:absolute; top:14px; right:14px; font-size:10px; font-weight:500; letter-spacing:0.1em; padding:4px 12px; border-radius:99px; text-transform:uppercase; }
-  .badge-halloween { background:#2D3B2D; color:#F5F0E8; }
-  .badge-navidad { background:#6B8F6B; color:#FDFCFA; }
-  .badge-santjordi { background:#D4857A; color:#FDFCFA; }
-  .badge-cumple { background:#C9A84C; color:#2D3B2D; }
+  .badge-halloween { background:#2D3B2D; color:#F5F0E8; } .badge-navidad { background:#6B8F6B; color:#FDFCFA; }
+  .badge-santjordi { background:#D4857A; color:#FDFCFA; } .badge-cumple { background:#C9A84C; color:#2D3B2D; }
   .kit-body { padding:18px 20px 22px; }
   .kit-name { font-size:15px; font-weight:500; color:var(--verde); margin-bottom:4px; }
   .kit-desc { font-size:12px; font-weight:300; color:var(--verde); opacity:0.6; margin-bottom:14px; line-height:1.6; }
@@ -114,7 +105,6 @@
   .footer-links a { font-size:12px; color:var(--crema); opacity:0.5; text-decoration:none; cursor:pointer; transition:opacity 0.2s; }
   .footer-links a:hover { opacity:1; }
 
-  /* AUTH */
   .auth-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:100px 24px 60px; }
   .auth-card { background:var(--blanco); border:1px solid rgba(45,59,45,0.1); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; }
   .auth-logo { text-align:center; font-size:22px; font-weight:600; letter-spacing:0.12em; color:var(--verde); margin-bottom:4px; cursor:pointer; }
@@ -135,27 +125,39 @@
   .auth-msg.error { display:block; background:#FCEBEB; color:#A32D2D; }
   .auth-msg.ok { display:block; background:#EAF3DE; color:#3B6D11; }
 
-  /* DASHBOARD */
   .dash { min-height:100vh; background:var(--crema); padding:110px 60px 80px; }
-  .dash-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:48px; flex-wrap:wrap; gap:20px; }
+  .dash-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:36px; flex-wrap:wrap; gap:20px; }
   .dash-greet h2 { font-size:28px; font-weight:600; color:var(--verde); letter-spacing:-0.01em; }
   .dash-greet p { font-size:14px; color:var(--verde); opacity:0.6; margin-top:4px; }
-  .dash-section-label { font-size:11px; font-weight:500; letter-spacing:0.2em; color:var(--dorado); text-transform:uppercase; margin:48px 0 20px; }
+  .dash-section-label { font-size:11px; font-weight:500; letter-spacing:0.2em; color:var(--dorado); text-transform:uppercase; margin:44px 0 20px; }
+
+  .canjear-box { background:var(--verde); border-radius:20px; padding:28px 32px; display:flex; flex-wrap:wrap; align-items:center; gap:20px; justify-content:space-between; }
+  .canjear-info h3 { color:var(--crema); font-size:16px; font-weight:500; margin-bottom:4px; }
+  .canjear-info p { color:var(--crema); opacity:0.65; font-size:13px; font-weight:300; max-width:360px; line-height:1.6; }
+  .canjear-form { display:flex; gap:10px; }
+  .canjear-form input { padding:13px 16px; border:none; border-radius:12px; font-size:14px; font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); width:200px; letter-spacing:0.06em; text-transform:uppercase; }
+  .canjear-form input:focus { outline:2px solid var(--dorado); }
+  .canjear-form .btn-canjear { background:var(--dorado); color:var(--verde); border:none; border-radius:12px; padding:0 26px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:opacity 0.2s; }
+  .canjear-form .btn-canjear:hover { opacity:0.88; }
+  .canjear-form .btn-canjear:disabled { opacity:0.5; cursor:not-allowed; }
+  .canjear-msg { width:100%; font-size:13px; margin:0; display:none; }
+  .canjear-msg.error { display:block; color:#F0997B; padding-top:6px; }
+  .canjear-msg.ok { display:block; color:#9FE1CB; padding-top:6px; }
+
   .empty-card { background:var(--blanco); border:1px dashed rgba(45,59,45,0.2); border-radius:20px; padding:48px 24px; text-align:center; }
-  .empty-card p { font-size:14px; color:var(--verde); opacity:0.6; margin-bottom:20px; }
+  .empty-card p { font-size:14px; color:var(--verde); opacity:0.6; }
   .badge-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
   .badge-card { background:var(--blanco); border:1px solid rgba(45,59,45,0.08); border-radius:20px; padding:24px 16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; }
-  .badge-card.locked { opacity:0.45; filter:grayscale(0.6); }
+  .badge-card.locked { opacity:0.4; filter:grayscale(0.7); }
   .badge-card .bname { font-size:13px; font-weight:500; color:var(--verde); }
   .badge-card .bdesc { font-size:11px; color:var(--verde); opacity:0.6; line-height:1.4; }
 
   @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:768px){ nav{padding:16px 24px;} .nav-links a:not(.always){display:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} }
+  @media (max-width:768px){ nav{padding:16px 24px;} .nav-links a:not(.always){display:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;} .canjear-form input{flex:1;width:auto;} }
 </style>
 </head>
 <body>
 
-<!-- ============ NAV ============ -->
 <nav>
   <div onclick="go('landing')" style="cursor:pointer;">
     <div class="nav-logo">KRE<span>A</span>NDO</div>
@@ -164,7 +166,6 @@
   <div class="nav-links" id="nav-links"></div>
 </nav>
 
-<!-- ============ LANDING ============ -->
 <div id="view-landing" class="view active">
   <section class="hero">
     <div class="hero-confetti">
@@ -211,15 +212,8 @@
   </section>
 
   <section class="kits" id="kits">
-    <div class="kits-header">
-      <div><p class="section-label">Catálogo</p><h2 class="section-title">Kits de temporada</h2></div>
-    </div>
-    <div class="kits-grid">
-      <div class="kit-card"><div class="kit-img" style="background:#FDF0ED;"><svg viewBox="0 0 52 52" fill="none"><ellipse cx="26" cy="31" rx="15" ry="13" fill="#D4857A"/><ellipse cx="26" cy="30" rx="12" ry="10" fill="#C06B60"/><path d="M16 27 Q18 21 21 23 Q22 19 26 20 Q30 19 31 23 Q34 21 36 27Z" fill="#A85448"/><ellipse cx="21" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><ellipse cx="31" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><path d="M20 32 Q23 35.5 26 35.5 Q29 35.5 32 32" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M24 18 C23 13 18 11 18 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><path d="M28 18 C29 13 33 11 33 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="26" cy="18" rx="3.5" ry="2.5" fill="#6B8F6B"/></svg><span class="kit-badge badge-halloween">Halloween</span></div><div class="kit-body"><div class="kit-name">Calabaza de gominolas</div><div class="kit-desc">Construye una calabaza perfecta con gominolas. Nivel 1.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
-      <div class="kit-card"><div class="kit-img" style="background:#EBF2EB;"><svg viewBox="0 0 52 52" fill="none"><rect x="22" y="37" width="8" height="7" rx="2" fill="#8B6914"/><polygon points="26,9 35,25 17,25" fill="#6B8F6B"/><polygon points="26,18 37,35 15,35" fill="#4A7A4A"/><circle cx="20" cy="22" r="2.2" fill="#C9A84C"/><circle cx="32" cy="22" r="2.2" fill="#D4857A"/><circle cx="17" cy="30" r="2.2" fill="#D4857A"/><circle cx="26" cy="32" r="2.2" fill="#C9A84C"/><circle cx="35" cy="30" r="2.2" fill="#C9A84C"/><polygon points="26,6 27.4,10 31.5,10 28.2,12.5 29.5,16.5 26,14 22.5,16.5 23.8,12.5 20.5,10 24.6,10" fill="#C9A84C"/></svg><span class="kit-badge badge-navidad">Navidad</span></div><div class="kit-body"><div class="kit-name">Árbol de Navidad</div><div class="kit-desc">Un árbol navideño comestible con estrella dorada. Nivel 2.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
-      <div class="kit-card"><div class="kit-img" style="background:#FDF0F2;"><svg viewBox="0 0 52 52" fill="none"><rect x="23" y="39" width="6" height="7" rx="1.5" fill="#A84060"/><circle cx="26" cy="23" r="13" fill="#D4857A"/><circle cx="26" cy="23" r="9" fill="#C06B60"/><path d="M26 14 C24 11 20 11 18 13 C16 15 17 18 19 19 C17 19 15 21 16 24 C17 27 20 28 22 27 C21 29 22 32 25 32 C28 32 29 29 28 27 C30 28 33 27 34 24 C35 21 33 19 31 19 C33 18 34 15 32 13 C30 11 27 11 26 14Z" fill="#D4857A"/><circle cx="26" cy="23" r="4" fill="#A84060"/><path d="M26 39 C26 39 22 35 20 31" stroke="#6B8F6B" stroke-width="2" stroke-linecap="round" fill="none"/><ellipse cx="18" cy="34" rx="4" ry="3" transform="rotate(-30 18 34)" fill="#6B8F6B"/></svg><span class="kit-badge badge-santjordi">Sant Jordi</span></div><div class="kit-body"><div class="kit-name">Rosa de Sant Jordi</div><div class="kit-desc">Una rosa dulce para regalar el 23 de abril. Nivel 1.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
-      <div class="kit-card"><div class="kit-img" style="background:#FDF5E8;"><svg viewBox="0 0 52 52" fill="none"><rect x="14" y="28" width="24" height="16" rx="3" fill="#C9A84C"/><rect x="14" y="28" width="24" height="7" rx="3" fill="#D4A820"/><rect x="12" y="26" width="28" height="5" rx="2.5" fill="#D4A820"/><rect x="24" y="18" width="4" height="10" rx="2" fill="#C9A84C"/><path d="M26 18 C26 18 20 14 18 10 C16 6 20 4 22 7 C24 10 26 18 26 18Z" fill="#D4857A"/><path d="M26 18 C26 18 32 14 34 10 C36 6 32 4 30 7 C28 10 26 18 26 18Z" fill="#6B8F6B"/><circle cx="20" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="26" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="32" cy="30" r="1.5" fill="#F5F0E8"/></svg><span class="kit-badge badge-cumple">Cumpleaños</span></div><div class="kit-body"><div class="kit-name">Tarta de cumpleaños</div><div class="kit-desc">La tarta perfecta para celebrar, con sorpresa en el centro. Nivel 3.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
-    </div>
+    <div class="kits-header"><div><p class="section-label">Catálogo</p><h2 class="section-title">Kits de temporada</h2></div></div>
+    <div class="kits-grid" id="landing-kits"></div>
   </section>
 
   <section class="insignias" id="insignias">
@@ -244,7 +238,6 @@
   </footer>
 </div>
 
-<!-- ============ LOGIN ============ -->
 <div id="view-login" class="view">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -261,7 +254,6 @@
   </div>
 </div>
 
-<!-- ============ REGISTRO ============ -->
 <div id="view-registro" class="view">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -279,7 +271,6 @@
   </div>
 </div>
 
-<!-- ============ DASHBOARD ============ -->
 <div id="view-app" class="view">
   <div class="dash">
     <div class="dash-top">
@@ -287,28 +278,49 @@
       <button class="btn-secondary" onclick="doLogout()">Cerrar sesión</button>
     </div>
 
-    <p class="dash-section-label">Mis kits</p>
-    <div id="mis-kits">
-      <div class="empty-card">
-        <p>Aún no has canjeado ningún kit.<br/>Cuando compres una caja, introduce su código para desbloquear la receta.</p>
-        <a class="btn-primary" style="opacity:0.5;cursor:not-allowed;">Canjear código (próximamente)</a>
+    <div class="canjear-box">
+      <div class="canjear-info">
+        <h3>¿Tienes un kit nuevo?</h3>
+        <p>Introduce el código de tu caja para desbloquear la receta y ganar tu insignia.</p>
       </div>
+      <div class="canjear-form">
+        <input type="text" id="codigo-input" placeholder="KRE-XXXX-XXXX" />
+        <button class="btn-canjear" id="canjear-btn" onclick="canjearCodigo()">Canjear</button>
+      </div>
+      <div id="canjear-msg" class="canjear-msg"></div>
     </div>
+
+    <p class="dash-section-label">Mis kits</p>
+    <div id="mis-kits"></div>
 
     <p class="dash-section-label">Mis insignias</p>
     <div class="badge-grid" id="mis-insignias"></div>
   </div>
 </div>
 
-<!-- ============ SUPABASE ============ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ====== CONFIGURACIÓN — pega aquí tus dos valores de Supabase ======
   const SUPABASE_URL = 'https://wcbhnnjvneawwmtxvszy.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_XR7RQHuCQx7YStCR531BGQ_0XSvKgy9';
-  // ===================================================================
-
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const KIT_BG = { 'Halloween':'#FDF0ED', 'Navidad':'#EBF2EB', 'Sant Jordi':'#FDF0F2', 'Cumpleaños':'#FDF5E8' };
+  const KIT_ICONS = {
+    'Halloween':'<ellipse cx="26" cy="31" rx="15" ry="13" fill="#D4857A"/><ellipse cx="26" cy="30" rx="12" ry="10" fill="#C06B60"/><path d="M16 27 Q18 21 21 23 Q22 19 26 20 Q30 19 31 23 Q34 21 36 27Z" fill="#A85448"/><ellipse cx="21" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><ellipse cx="31" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><path d="M20 32 Q23 35.5 26 35.5 Q29 35.5 32 32" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M24 18 C23 13 18 11 18 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><path d="M28 18 C29 13 33 11 33 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="26" cy="18" rx="3.5" ry="2.5" fill="#6B8F6B"/>',
+    'Navidad':'<rect x="22" y="37" width="8" height="7" rx="2" fill="#8B6914"/><polygon points="26,9 35,25 17,25" fill="#6B8F6B"/><polygon points="26,18 37,35 15,35" fill="#4A7A4A"/><circle cx="20" cy="22" r="2.2" fill="#C9A84C"/><circle cx="32" cy="22" r="2.2" fill="#D4857A"/><circle cx="17" cy="30" r="2.2" fill="#D4857A"/><circle cx="26" cy="32" r="2.2" fill="#C9A84C"/><circle cx="35" cy="30" r="2.2" fill="#C9A84C"/><polygon points="26,6 27.4,10 31.5,10 28.2,12.5 29.5,16.5 26,14 22.5,16.5 23.8,12.5 20.5,10 24.6,10" fill="#C9A84C"/>',
+    'Sant Jordi':'<rect x="23" y="39" width="6" height="7" rx="1.5" fill="#A84060"/><circle cx="26" cy="23" r="13" fill="#D4857A"/><circle cx="26" cy="23" r="9" fill="#C06B60"/><path d="M26 14 C24 11 20 11 18 13 C16 15 17 18 19 19 C17 19 15 21 16 24 C17 27 20 28 22 27 C21 29 22 32 25 32 C28 32 29 29 28 27 C30 28 33 27 34 24 C35 21 33 19 31 19 C33 18 34 15 32 13 C30 11 27 11 26 14Z" fill="#D4857A"/><circle cx="26" cy="23" r="4" fill="#A84060"/><path d="M26 39 C26 39 22 35 20 31" stroke="#6B8F6B" stroke-width="2" stroke-linecap="round" fill="none"/><ellipse cx="18" cy="34" rx="4" ry="3" transform="rotate(-30 18 34)" fill="#6B8F6B"/>',
+    'Cumpleaños':'<rect x="14" y="28" width="24" height="16" rx="3" fill="#C9A84C"/><rect x="14" y="28" width="24" height="7" rx="3" fill="#D4A820"/><rect x="12" y="26" width="28" height="5" rx="2.5" fill="#D4A820"/><rect x="24" y="18" width="4" height="10" rx="2" fill="#C9A84C"/><path d="M26 18 C26 18 20 14 18 10 C16 6 20 4 22 7 C24 10 26 18 26 18Z" fill="#D4857A"/><path d="M26 18 C26 18 32 14 34 10 C36 6 32 4 30 7 C28 10 26 18 26 18Z" fill="#6B8F6B"/><circle cx="20" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="26" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="32" cy="30" r="1.5" fill="#F5F0E8"/>'
+  };
+  const KIT_BADGE_CLASS = { 'Halloween':'badge-halloween','Navidad':'badge-navidad','Sant Jordi':'badge-santjordi','Cumpleaños':'badge-cumple' };
+  function kitBg(t){ return KIT_BG[t] || '#F5F0E8'; }
+  function kitIcon(t){ return KIT_ICONS[t] || ''; }
+
+  const CATALOGO = [
+    { nombre:'Calabaza de gominolas', temporada:'Halloween', nivel:1, desc:'Construye una calabaza perfecta con gominolas. Nivel 1.' },
+    { nombre:'Árbol de Navidad', temporada:'Navidad', nivel:2, desc:'Un árbol navideño comestible con estrella dorada. Nivel 2.' },
+    { nombre:'Rosa de Sant Jordi', temporada:'Sant Jordi', nivel:1, desc:'Una rosa dulce para regalar el 23 de abril. Nivel 1.' },
+    { nombre:'Tarta de cumpleaños', temporada:'Cumpleaños', nivel:3, desc:'La tarta perfecta para celebrar, con sorpresa en el centro. Nivel 3.' }
+  ];
 
   const BADGES = [
     { lvl:1, cls:'lvl-1', name:'Kreador novato', desc:'Primer kit canjeado', svg:'<path d="M45 6 L74 18 L74 48 C74 66 61 80 45 86 C29 80 16 66 16 48 L16 18 Z" fill="#C9A84C"/><path d="M45 12 L68 22 L68 48 C68 63 57 75 45 80 C33 75 22 63 22 48 L22 22 Z" fill="#D4A820"/><path d="M45 18 L62 26 L62 48 C62 60 53 70 45 74 C37 70 28 60 28 48 L28 26 Z" fill="#F0C040"/><polygon points="45,30 47.2,37 54.5,37 48.8,41.5 51,48.5 45,44 39,48.5 41.2,41.5 35.5,37 42.8,37" fill="#C9A84C"/><rect x="38" y="85" width="14" height="4" rx="2" fill="#B8920F"/><rect x="36" y="88" width="18" height="14" rx="3" fill="#C9A84C"/><rect x="39" y="91" width="12" height="8" rx="2" fill="#D4A820"/>' },
@@ -316,27 +328,43 @@
     { lvl:3, cls:'lvl-3', name:'Coleccionista', desc:'3 kits distintos', svg:'<path d="M45 6 L74 18 L74 48 C74 66 61 80 45 86 C29 80 16 66 16 48 L16 18 Z" fill="#D4857A"/><path d="M45 12 L68 22 L68 48 C68 63 57 75 45 80 C33 75 22 63 22 48 L22 22 Z" fill="#C06B60"/><path d="M45 18 L62 26 L62 48 C62 60 53 70 45 74 C37 70 28 60 28 48 L28 26 Z" fill="#E8958A"/><polygon points="33,26 34.4,30.5 39,30.5 35.5,33.2 36.9,37.5 33,34.8 29.1,37.5 30.5,33.2 27,30.5 31.6,30.5" fill="#C9A84C"/><polygon points="45,23 46.6,28 51.5,28 47.7,31 49.3,36 45,33 40.7,36 42.3,31 38.5,28 43.4,28" fill="#C9A84C"/><polygon points="57,26 58.4,30.5 63,30.5 59.5,33.2 60.9,37.5 57,34.8 53.1,37.5 54.5,33.2 51,30.5 55.6,30.5" fill="#C9A84C"/><circle cx="38" cy="56" r="3" fill="#C9A84C"/><circle cx="45" cy="58" r="3" fill="#D4A820"/><circle cx="52" cy="56" r="3" fill="#C9A84C"/><rect x="38" y="85" width="14" height="4" rx="2" fill="#A85040"/><rect x="36" y="88" width="18" height="14" rx="3" fill="#D4857A"/><rect x="39" y="91" width="12" height="8" rx="2" fill="#E8958A"/>' },
     { lvl:4, cls:'lvl-4', name:'Kreador experto', desc:'5 kits · sorteos exclusivos', svg:'<path d="M45 4 L76 17 L76 49 C76 68 63 83 45 90 C27 83 14 68 14 49 L14 17 Z" fill="#2D3B2D"/><path d="M45 10 L70 21 L70 49 C70 65 59 78 45 84 C31 78 20 65 20 49 L20 21 Z" fill="#3D5040"/><path d="M45 16 L64 25 L64 49 C64 62 55 73 45 78 C35 73 26 62 26 49 L26 25 Z" fill="#4A6B4A"/><polygon points="45,17 46.8,23 53,23 48,27 50,33 45,29 40,33 42,27 37,23 43.2,23" fill="#C9A84C"/><circle cx="37" cy="57" r="3.5" fill="#C9A84C"/><circle cx="45" cy="60" r="4" fill="#D4A820"/><circle cx="53" cy="57" r="3.5" fill="#C9A84C"/><polygon points="45,36 46,39.2 49.4,39.2 46.7,41.2 47.7,44.4 45,42.4 42.3,44.4 43.3,41.2 40.6,39.2 44,39.2" fill="#C9A84C"/><rect x="38" y="85" width="14" height="4" rx="2" fill="#1a2a1a"/><rect x="35" y="88" width="20" height="14" rx="3" fill="#2D3B2D"/><rect x="38" y="91" width="14" height="8" rx="2" fill="#3D5040"/>' }
   ];
-
   function badgeSVG(b){ return '<svg width="84" height="100" viewBox="0 0 90 108" fill="none">'+b.svg+'</svg>'; }
 
+  function renderLandingKits(){
+    document.getElementById('landing-kits').innerHTML = CATALOGO.map(k =>
+      '<div class="kit-card"><div class="kit-img" style="background:'+kitBg(k.temporada)+';"><svg viewBox="0 0 52 52" fill="none">'+kitIcon(k.temporada)+'</svg>'+
+      '<span class="kit-badge '+(KIT_BADGE_CLASS[k.temporada]||'')+'">'+k.temporada+'</span></div>'+
+      '<div class="kit-body"><div class="kit-name">'+k.nombre+'</div><div class="kit-desc">'+k.desc+'</div>'+
+      '<div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>').join('');
+  }
   function renderLandingBadges(){
     document.getElementById('landing-badges').innerHTML = BADGES.map(b =>
-      '<div class="insignia-card">'+badgeSVG(b)+
-      '<span class="insignia-level '+b.cls+'">Nivel '+b.lvl+'</span>'+
-      '<span class="insignia-name">'+b.name+'</span>'+
-      '<span class="insignia-desc">'+b.desc+'</span></div>').join('');
+      '<div class="insignia-card">'+badgeSVG(b)+'<span class="insignia-level '+b.cls+'">Nivel '+b.lvl+'</span>'+
+      '<span class="insignia-name">'+b.name+'</span><span class="insignia-desc">'+b.desc+'</span></div>').join('');
   }
-
-  function renderMyBadges(unlockedLevels){
+  function renderMyBadges(levels){
     document.getElementById('mis-insignias').innerHTML = BADGES.map(b => {
-      const on = unlockedLevels.includes(b.lvl);
+      const on = levels.includes(b.lvl);
       return '<div class="badge-card '+(on?'':'locked')+'">'+badgeSVG(b)+
-        '<span class="bname">'+b.name+'</span>'+
-        '<span class="bdesc">'+(on?'Conseguida':b.desc)+'</span></div>';
+        '<span class="bname">'+b.name+'</span><span class="bdesc">'+(on?'Conseguida':b.desc)+'</span></div>';
     }).join('');
   }
+  function renderMisKits(rows){
+    const cont = document.getElementById('mis-kits');
+    if(!rows || rows.length===0){
+      cont.innerHTML = '<div class="empty-card"><p>Aún no has canjeado ningún kit.<br/>Introduce el código de tu caja arriba para desbloquear tu primera receta.</p></div>';
+      return;
+    }
+    cont.innerHTML = '<div class="kits-grid">'+rows.map(r=>{
+      const k = r.kits; if(!k) return '';
+      const t = k.temporada || '';
+      return '<div class="kit-card"><div class="kit-img" style="background:'+kitBg(t)+';"><svg viewBox="0 0 52 52" fill="none">'+kitIcon(t)+'</svg>'+
+        '<span class="kit-badge '+(KIT_BADGE_CLASS[t]||'')+'">'+t+'</span></div>'+
+        '<div class="kit-body"><div class="kit-name">'+k.nombre+'</div><div class="kit-desc">'+(k.descripcion||'')+'</div>'+
+        '<div class="kit-footer"><span class="kit-sizes">Nivel '+(k.nivel||1)+'</span><span class="kit-cta">Ver receta →</span></div></div></div>';
+    }).join('')+'</div>';
+  }
 
-  // ====== ROUTER ======
   let currentUser = null;
   function go(view){
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -344,21 +372,14 @@
     window.scrollTo(0,0);
     renderNav(view);
   }
-
   function renderNav(view){
     const nav = document.getElementById('nav-links');
-    if(currentUser && view==='app'){
-      nav.innerHTML = '';
-    } else if(currentUser){
-      nav.innerHTML = '<a class="always" onclick="go(\'app\')">Mi cuenta</a>';
-    } else if(view==='landing'){
-      nav.innerHTML = '<a href="#como">Cómo funciona</a><a href="#kits">Kits</a><a href="#insignias">Insignias</a><button class="btn-nav" onclick="go(\'login\')">Acceder</button>';
-    } else {
-      nav.innerHTML = '<button class="btn-nav" onclick="go(\'landing\')">Inicio</button>';
-    }
+    if(currentUser && view==='app'){ nav.innerHTML=''; }
+    else if(currentUser){ nav.innerHTML='<a class="always" onclick="go(\'app\')">Mi cuenta</a>'; }
+    else if(view==='landing'){ nav.innerHTML='<a href="#como">Cómo funciona</a><a href="#kits">Kits</a><a href="#insignias">Insignias</a><button class="btn-nav" onclick="go(\'login\')">Acceder</button>'; }
+    else { nav.innerHTML='<button class="btn-nav" onclick="go(\'landing\')">Inicio</button>'; }
   }
 
-  // ====== AUTH ======
   function msg(id, text, type){ const el=document.getElementById(id); el.textContent=text; el.className='auth-msg '+type; }
 
   async function doRegister(){
@@ -370,10 +391,8 @@
     const { data, error } = await sb.auth.signUp({ email, password:pass, options:{ data:{ nombre:name } } });
     btn.disabled=false; btn.textContent='Crear cuenta';
     if(error){ msg('reg-msg', error.message, 'error'); return; }
-    if(data.session){ enterApp(); }
-    else { msg('reg-msg','¡Cuenta creada! Revisa tu correo para confirmar y luego inicia sesión.','ok'); }
+    if(data.session){ enterApp(); } else { msg('reg-msg','¡Cuenta creada! Revisa tu correo para confirmar y luego inicia sesión.','ok'); }
   }
-
   async function doLogin(){
     const email=document.getElementById('login-email').value.trim();
     const pass=document.getElementById('login-pass').value;
@@ -384,24 +403,52 @@
     if(error){ msg('login-msg','Correo o contraseña incorrectos.','error'); return; }
     enterApp();
   }
-
   async function doLogout(){ await sb.auth.signOut(); currentUser=null; go('landing'); }
+
+  async function loadMisKits(uid){
+    const { data } = await sb.from('codigos').select('codigo, usado_en, kits(nombre,temporada,nivel,descripcion)').eq('usado_por', uid).order('usado_en',{ascending:false});
+    renderMisKits(data||[]);
+  }
+  async function loadMisBadges(uid){
+    const { data } = await sb.from('usuarios_insignias').select('insignias(nivel)').eq('usuario_id', uid);
+    const levels = (data||[]).map(r => r.insignias && r.insignias.nivel).filter(x=>x);
+    renderMyBadges(levels);
+  }
+
+  function cmsg(t,type){ const e=document.getElementById('canjear-msg'); e.textContent=t; e.className='canjear-msg '+type; }
+  async function canjearCodigo(){
+    const input=document.getElementById('codigo-input');
+    const code=input.value.trim().toUpperCase();
+    if(!code){ cmsg('Introduce un código.','error'); return; }
+    const btn=document.getElementById('canjear-btn'); btn.disabled=true; btn.textContent='Canjeando...';
+    const { data, error } = await sb.rpc('canjear_codigo', { p_codigo: code });
+    btn.disabled=false; btn.textContent='Canjear';
+    if(error){ cmsg('Ha ocurrido un error. Inténtalo de nuevo.','error'); return; }
+    if(!data || !data.ok){
+      const m = { no_autenticado:'Debes iniciar sesión.', codigo_usado:'Este código ya ha sido canjeado.', codigo_invalido:'Código no válido. Revísalo e inténtalo de nuevo.' };
+      cmsg((data && m[data.error]) || 'No se ha podido canjear.','error'); return;
+    }
+    cmsg('¡Has desbloqueado "'+data.kit_nombre+'"! 🎉','ok');
+    input.value='';
+    const { data:{ user } } = await sb.auth.getUser();
+    await loadMisKits(user.id); await loadMisBadges(user.id);
+  }
 
   async function enterApp(){
     const { data:{ user } } = await sb.auth.getUser();
     currentUser = user;
     const nombre = (user.user_metadata && user.user_metadata.nombre) || 'Kreador';
     document.getElementById('greet-name').textContent = 'Hola, '+nombre+' 👋';
-    renderMyBadges([]); // sin insignias todavía
     go('app');
+    await loadMisKits(user.id);
+    await loadMisBadges(user.id);
   }
 
-  // ====== INIT ======
   (async function(){
+    renderLandingKits();
     renderLandingBadges();
     const { data:{ session } } = await sb.auth.getSession();
-    if(session){ await enterApp(); }
-    else { renderNav('landing'); }
+    if(session){ await enterApp(); } else { renderNav('landing'); }
   })();
 </script>
 </body>
