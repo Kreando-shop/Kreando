@@ -225,7 +225,7 @@
     <h1 class="hero-title">Abre.<br/>Descubre.<br/><em>Disfruta.</em></h1>
     <p class="hero-sub">Kits de ingredientes para crear momentos únicos en familia. Cada temporada, una sorpresa nueva.</p>
     <div class="hero-ctas">
-      <a class="btn-primary" onclick="go('registro')">Crear mi cuenta</a>
+      <a class="btn-primary landing-cta" data-guest="Crear mi cuenta" onclick="ctaCuenta()">Crear mi cuenta</a>
       <a class="btn-secondary" href="#kits">Ver kits</a>
     </div>
     <div class="hero-scroll"><span>Descubrir</span><div class="scroll-line"></div></div>
@@ -267,13 +267,13 @@
       <p class="section-sub" style="margin:0 auto;">Cada logro desbloquea una insignia única. Cuanto más difícil, más espectacular. Acumúlalas para descuentos y sorteos.</p>
     </div>
     <div class="insignias-grid" id="landing-badges"></div>
-    <div class="insignias-cta"><a class="btn-primary" onclick="go('registro')">Crear mi cuenta gratis</a></div>
+    <div class="insignias-cta"><a class="btn-primary landing-cta" data-guest="Crear mi cuenta gratis" onclick="ctaCuenta()">Crear mi cuenta gratis</a></div>
   </section>
 
   <section class="cierre">
     <h2 class="cierre-title">Sorpresas que<br/><em>se saborean.</em></h2>
     <p>Una experiencia gourmet para compartir con quienes más quieres. En cada temporada, una nueva razón para crear juntos.</p>
-    <a class="btn-primary" style="background:var(--dorado);color:var(--verde);" onclick="go('registro')">Empezar ahora</a>
+    <a class="btn-primary landing-cta" style="background:var(--dorado);color:var(--verde);" data-guest="Empezar ahora" onclick="ctaCuenta()">Empezar ahora</a>
   </section>
 
   <footer>
@@ -474,6 +474,13 @@
     else if(currentUser){ nav.innerHTML='<a class="always" onclick="go(\'app\')">Mi cuenta</a>'+adminLink; }
     else if(view==='landing'){ nav.innerHTML='<a href="#como">Cómo funciona</a><a href="#kits">Kits</a><a href="#insignias">Insignias</a><button class="btn-nav" onclick="go(\'login\')">Acceder</button>'; }
     else { nav.innerHTML='<button class="btn-nav" onclick="go(\'landing\')">Inicio</button>'; }
+    updateLandingCTAs();
+  }
+  function ctaCuenta(){ go(currentUser ? 'app' : 'registro'); }
+  function updateLandingCTAs(){
+    document.querySelectorAll('.landing-cta').forEach(el=>{
+      el.textContent = currentUser ? 'Ir a mi cuenta' : el.getAttribute('data-guest');
+    });
   }
 
   function msg(id, text, type){ const el=document.getElementById(id); el.textContent=text; el.className='auth-msg '+type; }
