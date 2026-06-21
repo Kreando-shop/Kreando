@@ -8,8 +8,8 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --verde:#2D3B2D; --salvia:#6B8F6B; --rosa:#D4857A; --dorado:#C9A84C; --crema:#F5F0E8; --crema2:#EDE8DF; --blanco:#FDFCFA; }
-  html { scroll-behavior: smooth; }
-  body { font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); font-size:16px; line-height:1.7; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); font-size:16px; line-height:1.7; overflow-x:hidden; width:100%; max-width:100%; }
   .view { display:none; } .view.active { display:block; }
 
   nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 60px; background:rgba(245,240,232,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(45,59,45,0.08); }
@@ -217,9 +217,17 @@
   .codigo-mono { font-weight:500; letter-spacing:0.06em; }
   .estado-libre { color:#3B6D11; font-weight:500; }
   .estado-usado { color:#A85040; font-weight:500; }
+  .admin-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .admin-tab { background:var(--crema); border:1px solid rgba(45,59,45,0.15); color:var(--verde); border-radius:99px; padding:8px 16px; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:all 0.2s; }
+  .admin-tab:hover { border-color:var(--dorado); }
+  .admin-tab.active { background:var(--verde); color:var(--crema); border-color:var(--verde); }
+  .btn-row-act { background:none; border:1px solid rgba(45,59,45,0.2); border-radius:8px; padding:5px 10px; font-size:12px; font-family:'Poppins',sans-serif; color:var(--verde); cursor:pointer; transition:all 0.15s; white-space:nowrap; }
+  .btn-row-act:hover { border-color:var(--dorado); }
+  .btn-row-act.danger { color:#A85040; border-color:rgba(168,80,64,0.3); }
+  .btn-row-act.danger:hover { background:#A85040; color:#fff; border-color:#A85040; }
 
   @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:768px){ nav{padding:16px 24px;} .nav-toggle{display:flex;} .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--crema);border-bottom:1px solid rgba(45,59,45,0.08);padding:0 24px;max-height:0;overflow:hidden;transition:max-height 0.3s ease;} .nav-links.open{max-height:80vh;padding:8px 24px 18px;} .nav-links a,.nav-links .btn-nav{width:100%;padding:15px 4px;border-bottom:1px solid rgba(45,59,45,0.06);text-align:left;border-radius:0;font-size:15px;} .nav-links .btn-nav{background:none;color:var(--verde);font-weight:500;} .nav-links a:last-child,.nav-links .btn-nav:last-child{border-bottom:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;} .canjear-form input{flex:1;width:auto;} .admin-card{padding:22px 18px;} .admin-form{grid-template-columns:1fr;} }
+  @media (max-width:768px){ nav{padding:16px 24px;} .nav-toggle{display:flex;} .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--crema);border-bottom:1px solid rgba(45,59,45,0.08);padding:0 24px;max-height:0;overflow:hidden;transition:max-height 0.3s ease;} .nav-links.open{max-height:80vh;padding:8px 24px 18px;} .nav-links a,.nav-links .btn-nav{width:100%;padding:15px 4px;border-bottom:1px solid rgba(45,59,45,0.06);text-align:left;border-radius:0;font-size:15px;} .nav-links .btn-nav{background:none;color:var(--verde);font-weight:500;} .nav-links a:last-child,.nav-links .btn-nav:last-child{border-bottom:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;flex-wrap:wrap;} .canjear-form input{flex:1 1 100%;width:auto;} .canjear-form .btn-canjear,.canjear-form .btn-scan{flex:1;} .admin-card{padding:22px 18px;} .admin-form{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -395,10 +403,15 @@
         <button class="btn-admin" id="admin-pdf-btn" style="background:var(--dorado);color:var(--verde);" onclick="descargarQRsPDF()">⤓ Descargar QRs (PDF)</button>
       </div>
       <div id="admin-pdf-msg" class="admin-msg"></div>
+      <div class="admin-tabs">
+        <button class="admin-tab active" id="tab-sincanjear" onclick="setAdminTab('sincanjear')">Sin canjear</button>
+        <button class="admin-tab" id="tab-canjeados" onclick="setAdminTab('canjeados')">Canjeados</button>
+        <button class="admin-tab" id="tab-eliminados" onclick="setAdminTab('eliminados')">Eliminados</button>
+      </div>
       <div id="admin-stats" class="admin-stats"></div>
       <div style="overflow-x:auto;">
         <table class="admin-table">
-          <thead><tr><th>Código</th><th>Kit</th><th>Lote</th><th>Estado</th></tr></thead>
+          <thead><tr><th>Código</th><th>Kit</th><th>Lote</th><th>Estado</th><th>Acciones</th></tr></thead>
           <tbody id="admin-tbody"></tbody>
         </table>
       </div>
@@ -601,7 +614,10 @@
   // Lógica central de canjeo, reutilizada por el formulario manual y por el escáner QR
   async function procesarCanjeo(code){
     const { data, error } = await sb.rpc('canjear_codigo', { p_codigo: code });
-    if(error){ return { ok:false, msg:'Ha ocurrido un error. Inténtalo de nuevo.' }; }
+    if(error){
+      if((error.message||'').includes('codigo_eliminado')){ return { ok:false, msg:'Este código ha sido eliminado y ya no es válido.' }; }
+      return { ok:false, msg:'Ha ocurrido un error. Inténtalo de nuevo.' };
+    }
     if(!data || !data.ok){
       const m = { no_autenticado:'Debes iniciar sesión.', codigo_usado:'Este código ya ha sido canjeado.', codigo_invalido:'Código no válido. Revísalo e inténtalo de nuevo.' };
       return { ok:false, msg:(data && m[data.error]) || 'No se ha podido canjear.' };
@@ -772,23 +788,75 @@
   }
 
   let codigosCargados = [];
+  let adminTab = 'sincanjear';
+
   async function cargarCodigosAdmin(){
     const lote = document.getElementById('admin-filter-lote').value.trim();
-    let q = sb.from('codigos').select('codigo,lote,usado,kits(nombre)').order('creado_en',{ascending:false}).limit(500);
+    let q = sb.from('codigos').select('codigo,lote,usado,eliminado,kits(nombre)').order('creado_en',{ascending:false}).limit(1000);
     if(lote){ q = q.eq('lote', lote); }
     const { data, error } = await q;
+    codigosCargados = (error || !data) ? [] : data;
+    if(error){ document.getElementById('admin-tbody').innerHTML=''; document.getElementById('admin-stats').textContent='No se pudieron cargar los códigos.'; return; }
+    renderAdminTabla();
+  }
+
+  function codigosDeTab(){
+    return codigosCargados.filter(r=>{
+      if(adminTab==='eliminados') return r.eliminado;
+      if(r.eliminado) return false;
+      return adminTab==='canjeados' ? r.usado : !r.usado;
+    });
+  }
+
+  function setAdminTab(t){
+    adminTab=t;
+    ['sincanjear','canjeados','eliminados'].forEach(k=>{
+      document.getElementById('tab-'+k).classList.toggle('active', k===t);
+    });
+    renderAdminTabla();
+  }
+
+  function renderAdminTabla(){
     const tbody=document.getElementById('admin-tbody');
     const stats=document.getElementById('admin-stats');
-    codigosCargados = data || [];
-    if(error || !data){ tbody.innerHTML=''; stats.textContent='No se pudieron cargar los códigos.'; return; }
-    if(data.length===0){ tbody.innerHTML=''; stats.textContent='No hay códigos'+(lote?' en el lote "'+lote+'".':' todavía.'); return; }
-    const total=data.length, usados=data.filter(r=>r.usado).length, libres=total-usados;
-    stats.textContent = total+' códigos · '+libres+' libres · '+usados+' canjeados';
-    tbody.innerHTML = data.map(r=>{
+    const nSin=codigosCargados.filter(r=>!r.eliminado&&!r.usado).length;
+    const nCanj=codigosCargados.filter(r=>!r.eliminado&&r.usado).length;
+    const nElim=codigosCargados.filter(r=>r.eliminado).length;
+    document.getElementById('tab-sincanjear').textContent='Sin canjear ('+nSin+')';
+    document.getElementById('tab-canjeados').textContent='Canjeados ('+nCanj+')';
+    document.getElementById('tab-eliminados').textContent='Eliminados ('+nElim+')';
+    const filas=codigosDeTab();
+    if(filas.length===0){ tbody.innerHTML=''; stats.textContent='No hay códigos en este apartado.'; return; }
+    stats.textContent = filas.length+' código'+(filas.length===1?'':'s')+' en este apartado.';
+    tbody.innerHTML = filas.map(r=>{
       const kit = r.kits ? r.kits.nombre : '—';
-      return '<tr><td class="codigo-mono">'+r.codigo+'</td><td>'+kit+'</td><td>'+(r.lote||'—')+'</td>'+
-        '<td>'+(r.usado?'<span class="estado-usado">Canjeado</span>':'<span class="estado-libre">Libre</span>')+'</td></tr>';
+      const estado = r.usado?'<span class="estado-usado">Canjeado</span>':'<span class="estado-libre">Libre</span>';
+      let acc;
+      if(adminTab==='eliminados'){
+        acc = '<button class="btn-row-act" onclick="restaurarCodigo(\''+r.codigo+'\')">Restaurar</button> '+
+              '<button class="btn-row-act danger" onclick="borrarCodigoDef(\''+r.codigo+'\')">Borrar</button>';
+      } else {
+        acc = '<button class="btn-row-act danger" onclick="eliminarCodigo(\''+r.codigo+'\')">Eliminar</button>';
+      }
+      return '<tr><td class="codigo-mono">'+r.codigo+'</td><td>'+kit+'</td><td>'+(r.lote||'—')+'</td><td>'+estado+'</td><td>'+acc+'</td></tr>';
     }).join('');
+  }
+
+  async function eliminarCodigo(code){
+    const { error } = await sb.rpc('admin_marcar_eliminado',{ p_codigo:code, p_eliminado:true });
+    if(error){ pdfmsg('No se pudo eliminar. ¿Has ejecutado el SQL de la papelera en Supabase?','error'); return; }
+    await cargarCodigosAdmin();
+  }
+  async function restaurarCodigo(code){
+    const { error } = await sb.rpc('admin_marcar_eliminado',{ p_codigo:code, p_eliminado:false });
+    if(error){ pdfmsg('No se pudo restaurar el código.','error'); return; }
+    await cargarCodigosAdmin();
+  }
+  async function borrarCodigoDef(code){
+    if(!confirm('¿Borrar definitivamente el código '+code+'? Esta acción no se puede deshacer.')) return;
+    const { error } = await sb.rpc('admin_borrar_codigo',{ p_codigo:code });
+    if(error){ pdfmsg('No se pudo borrar el código.','error'); return; }
+    await cargarCodigosAdmin();
   }
 
   function pdfmsg(t,type){ const e=document.getElementById('admin-pdf-msg'); e.textContent=t; e.className='admin-msg '+type; }
@@ -839,8 +907,8 @@
   async function descargarQRsPDF(){
     if(typeof qrcode==='undefined'){ pdfmsg('No se cargó el generador de QR. Recarga la página (Ctrl+F5) e inténtalo de nuevo.','error'); return; }
     if(!window.jspdf){ pdfmsg('No se cargó el generador de PDF. Recarga la página (Ctrl+F5) e inténtalo de nuevo.','error'); return; }
-    const codes = codigosCargados.map(r=>r.codigo);
-    if(codes.length===0){ pdfmsg('No hay códigos en la lista. Pulsa "Buscar" primero (puedes filtrar por lote).','error'); return; }
+    const codes = codigosDeTab().map(r=>r.codigo);
+    if(codes.length===0){ pdfmsg('No hay códigos en este apartado. Pulsa "Buscar" y elige la pestaña "Sin canjear".','error'); return; }
     if(codes.length>120 && !confirm('Vas a generar '+codes.length+' QRs (varias páginas). Puede tardar un poco. ¿Continuar?')){ return; }
 
     const btn=document.getElementById('admin-pdf-btn'); btn.disabled=true;
