@@ -7,41 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --verde:#2D3B2D; --salvia:#6B8F6B; --rosa:#D4857A; --dorado:#C9A84C; --crema:#F5F0E8; --crema2:#EDE8DF; --blanco:#FDFCFA; }
-  html { scroll-behavior: smooth; overflow-x: hidden; }
-  body { font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); font-size:16px; line-height:1.7; overflow-x:hidden; width:100%; max-width:100%; }
-  .view { display:none; } .view.active { display:block; }
+  :root {
+    --verde:#2D3B2D; --salvia:#6B8F6B; --rosa:#D4857A;
+    --dorado:#C9A84C; --crema:#F5F0E8; --crema2:#EDE8DF; --blanco:#FDFCFA;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); font-size:16px; line-height:1.7; }
 
-  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 60px; background:rgba(245,240,232,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(45,59,45,0.08); }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* NAV */
+  nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:20px 60px; background:rgba(245,240,232,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(45,59,45,0.08); }
   .nav-logo { font-size:18px; font-weight:600; letter-spacing:0.12em; color:var(--verde); cursor:pointer; }
   .nav-logo span { color:var(--dorado); }
   .nav-tagline { font-size:10px; font-weight:300; letter-spacing:0.2em; color:var(--dorado); text-transform:uppercase; margin-top:2px; }
-  .nav-links { display:flex; gap:26px; align-items:center; }
+  .nav-links { display:flex; gap:32px; align-items:center; }
   .nav-links a { font-size:13px; font-weight:400; color:var(--verde); text-decoration:none; letter-spacing:0.04em; opacity:0.7; cursor:pointer; transition:opacity 0.2s; }
   .nav-links a:hover { opacity:1; }
-  .nav-links a.scan-link { color:var(--dorado); opacity:1; font-weight:500; display:inline-flex; align-items:center; gap:6px; }
-  .nav-toggle { display:none; background:none; border:none; cursor:pointer; flex-direction:column; gap:5px; padding:6px; }
-  .nav-toggle span { display:block; width:24px; height:2px; background:var(--verde); border-radius:2px; transition:transform 0.25s, opacity 0.25s; }
-  .nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
-  .nav-toggle.open span:nth-child(2){ opacity:0; }
-  .nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
-
-  .scanner-overlay { position:fixed; inset:0; background:rgba(45,59,45,0.72); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:1100; padding:24px; }
-  .scanner-overlay.show { display:flex; }
-  .scanner-card { background:var(--blanco); border-radius:24px; padding:24px; width:100%; max-width:380px; }
-  .scanner-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-  .scanner-head h3 { font-size:16px; font-weight:500; color:var(--verde); }
-  .scanner-close { background:none; border:none; font-size:22px; color:var(--verde); cursor:pointer; opacity:0.55; line-height:1; padding:0 4px; }
-  .scanner-close:hover { opacity:1; }
-  #qr-reader { width:100%; border-radius:16px; overflow:hidden; background:var(--crema2); }
-  #qr-reader video { border-radius:16px; }
-  .scanner-hint { font-size:13px; color:var(--verde); opacity:0.65; text-align:center; margin-top:14px; line-height:1.5; }
-  .confirm-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
-  .modal-btn.ghost { background:transparent; color:var(--verde); border:1.5px solid var(--verde); }
-  .modal-btn.ghost:hover { background:var(--verde); color:var(--crema); }
   .btn-nav { font-family:'Poppins',sans-serif; font-size:13px; font-weight:500; background:var(--verde); color:var(--crema); border:none; border-radius:99px; padding:10px 24px; cursor:pointer; letter-spacing:0.04em; transition:background 0.2s, transform 0.15s; }
   .btn-nav:hover { background:var(--salvia); transform:scale(1.02); }
 
+  /* HERO */
   .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:140px 40px 80px; position:relative; overflow:hidden; }
   .hero-confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
   .dot { position:absolute; border-radius:50%; animation:float 6s ease-in-out infinite; }
@@ -91,8 +78,10 @@
   .kit-img { height:150px; display:flex; align-items:center; justify-content:center; position:relative; }
   .kit-img svg { width:76px; height:76px; }
   .kit-badge { position:absolute; top:14px; right:14px; font-size:10px; font-weight:500; letter-spacing:0.1em; padding:4px 12px; border-radius:99px; text-transform:uppercase; }
-  .badge-halloween { background:#2D3B2D; color:#F5F0E8; } .badge-navidad { background:#6B8F6B; color:#FDFCFA; }
-  .badge-santjordi { background:#D4857A; color:#FDFCFA; } .badge-cumple { background:#C9A84C; color:#2D3B2D; }
+  .badge-halloween { background:#2D3B2D; color:#F5F0E8; }
+  .badge-navidad { background:#6B8F6B; color:#FDFCFA; }
+  .badge-santjordi { background:#D4857A; color:#FDFCFA; }
+  .badge-cumple { background:#C9A84C; color:#2D3B2D; }
   .kit-body { padding:18px 20px 22px; }
   .kit-name { font-size:15px; font-weight:500; color:var(--verde); margin-bottom:4px; }
   .kit-desc { font-size:12px; font-weight:300; color:var(--verde); opacity:0.6; margin-bottom:14px; line-height:1.6; }
@@ -125,6 +114,7 @@
   .footer-links a { font-size:12px; color:var(--crema); opacity:0.5; text-decoration:none; cursor:pointer; transition:opacity 0.2s; }
   .footer-links a:hover { opacity:1; }
 
+  /* AUTH */
   .auth-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:100px 24px 60px; }
   .auth-card { background:var(--blanco); border:1px solid rgba(45,59,45,0.1); border-radius:24px; padding:44px 40px; width:100%; max-width:420px; }
   .auth-logo { text-align:center; font-size:22px; font-weight:600; letter-spacing:0.12em; color:var(--verde); margin-bottom:4px; cursor:pointer; }
@@ -145,109 +135,109 @@
   .auth-msg.error { display:block; background:#FCEBEB; color:#A32D2D; }
   .auth-msg.ok { display:block; background:#EAF3DE; color:#3B6D11; }
 
+  /* DASHBOARD */
   .dash { min-height:100vh; background:var(--crema); padding:110px 60px 80px; }
-  .dash-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:36px; flex-wrap:wrap; gap:20px; }
+  .dash-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:48px; flex-wrap:wrap; gap:20px; }
   .dash-greet h2 { font-size:28px; font-weight:600; color:var(--verde); letter-spacing:-0.01em; }
   .dash-greet p { font-size:14px; color:var(--verde); opacity:0.6; margin-top:4px; }
-  .dash-section-label { font-size:11px; font-weight:500; letter-spacing:0.2em; color:var(--dorado); text-transform:uppercase; margin:44px 0 20px; }
-
-  .canjear-box { background:var(--verde); border-radius:20px; padding:28px 32px; display:flex; flex-wrap:wrap; align-items:center; gap:20px; justify-content:space-between; }
-  .canjear-info h3 { color:var(--crema); font-size:16px; font-weight:500; margin-bottom:4px; }
-  .canjear-info p { color:var(--crema); opacity:0.65; font-size:13px; font-weight:300; max-width:360px; line-height:1.6; }
-  .canjear-form { display:flex; gap:10px; }
-  .canjear-form input { padding:13px 16px; border:none; border-radius:12px; font-size:14px; font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); width:200px; letter-spacing:0.06em; text-transform:uppercase; }
-  .canjear-form input:focus { outline:2px solid var(--dorado); }
-  .canjear-form .btn-canjear { background:var(--dorado); color:var(--verde); border:none; border-radius:12px; padding:0 26px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:opacity 0.2s; }
-  .canjear-form .btn-canjear:hover { opacity:0.88; }
-  .canjear-form .btn-canjear:disabled { opacity:0.5; cursor:not-allowed; }
-  .canjear-form .btn-scan { background:var(--salvia); color:var(--crema); border:none; border-radius:12px; padding:0 20px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:opacity 0.2s; white-space:nowrap; }
-  .canjear-form .btn-scan:hover { opacity:0.88; }
-  .canjear-msg { width:100%; font-size:13px; margin:0; display:none; }
-  .canjear-msg.error { display:block; color:#F0997B; padding-top:6px; }
-  .canjear-msg.ok { display:block; color:#9FE1CB; padding-top:6px; }
-
+  .dash-section-label { font-size:11px; font-weight:500; letter-spacing:0.2em; color:var(--dorado); text-transform:uppercase; margin:48px 0 20px; }
   .empty-card { background:var(--blanco); border:1px dashed rgba(45,59,45,0.2); border-radius:20px; padding:48px 24px; text-align:center; }
-  .empty-card p { font-size:14px; color:var(--verde); opacity:0.6; }
+  .empty-card p { font-size:14px; color:var(--verde); opacity:0.6; margin-bottom:20px; }
   .badge-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
   .badge-card { background:var(--blanco); border:1px solid rgba(45,59,45,0.08); border-radius:20px; padding:24px 16px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center; }
-  .badge-card.locked { opacity:0.4; filter:grayscale(0.7); }
+  .badge-card.locked { opacity:0.45; filter:grayscale(0.6); }
   .badge-card .bname { font-size:13px; font-weight:500; color:var(--verde); }
   .badge-card .bdesc { font-size:11px; color:var(--verde); opacity:0.6; line-height:1.4; }
 
-  .modal-overlay { position:fixed; inset:0; background:rgba(45,59,45,0.55); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:1000; padding:24px; }
-  .modal-overlay.show { display:flex; }
-  .modal-card { position:relative; background:var(--blanco); border-radius:28px; padding:46px 36px 32px; width:100%; max-width:380px; text-align:center; overflow:hidden; animation:cardPop 0.45s cubic-bezier(0.2,0.9,0.3,1.3); }
-  @keyframes cardPop { 0%{transform:scale(0.82);opacity:0;} 100%{transform:scale(1);opacity:1;} }
-  .modal-confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1; }
-  .confetti-piece { position:absolute; width:9px; height:9px; top:-14px; }
-  @keyframes confettiFall { 0%{transform:translateY(-14px) rotate(0);opacity:1;} 100%{transform:translateY(420px) rotate(380deg);opacity:0;} }
-  .modal-visual, .modal-eyebrow, .modal-title, .modal-text, .modal-btn { position:relative; z-index:2; }
-  .modal-visual { display:flex; align-items:center; justify-content:center; margin-bottom:20px; min-height:130px; }
-  .modal-visual.badge svg { width:130px; height:auto; animation:badgePop 0.7s cubic-bezier(0.2,0.9,0.3,1.4) 0.08s both; }
-  .modal-visual .kiticon { width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; animation:badgePop 0.6s cubic-bezier(0.2,0.9,0.3,1.4) 0.08s both; }
-  .modal-visual .kiticon svg { width:72px; height:72px; }
-  @keyframes badgePop { 0%{transform:scale(0) rotate(-18deg);} 60%{transform:scale(1.14) rotate(6deg);} 100%{transform:scale(1) rotate(0);} }
-  .modal-eyebrow { font-size:11px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--dorado); margin-bottom:8px; }
-  .modal-title { font-size:24px; font-weight:600; color:var(--verde); margin-bottom:8px; letter-spacing:-0.01em; }
-  .modal-text { font-size:14px; color:var(--verde); opacity:0.65; margin-bottom:26px; line-height:1.6; }
-  .modal-btn { background:var(--verde); color:var(--crema); border:none; border-radius:99px; padding:13px 34px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:background 0.2s; }
-  .modal-btn:hover { background:var(--salvia); }
+  /* LEGAL / DOC PAGES */
+  .legal-wrap { max-width:780px; margin:0 auto; padding:130px 32px 90px; }
+  .legal-back { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--salvia); cursor:pointer; margin-bottom:28px; letter-spacing:0.02em; text-decoration:none; transition:color 0.2s; }
+  .legal-back:hover { color:var(--verde); }
+  .legal-eyebrow { font-size:11px; font-weight:500; letter-spacing:0.22em; color:var(--dorado); text-transform:uppercase; margin-bottom:12px; }
+  .legal-title { font-size:clamp(30px,5vw,46px); font-weight:600; letter-spacing:-0.02em; color:var(--verde); line-height:1.1; margin-bottom:10px; }
+  .legal-updated { font-size:12px; color:var(--verde); opacity:0.5; margin-bottom:32px; }
+  .legal-disclaimer { background:#FDF0ED; border:1px solid rgba(212,133,122,0.35); border-radius:14px; padding:16px 20px; font-size:13px; color:#A85040; line-height:1.6; margin-bottom:40px; }
+  .legal-disclaimer strong { color:#8a3f30; }
+  .legal-body h3 { font-size:19px; font-weight:600; color:var(--verde); margin:36px 0 12px; letter-spacing:-0.01em; }
+  .legal-body h4 { font-size:15px; font-weight:500; color:var(--verde); margin:24px 0 8px; }
+  .legal-body p { font-size:14.5px; font-weight:300; color:var(--verde); opacity:0.85; line-height:1.8; margin-bottom:14px; }
+  .legal-body ul { margin:0 0 16px 0; padding-left:20px; }
+  .legal-body li { font-size:14.5px; font-weight:300; color:var(--verde); opacity:0.85; line-height:1.8; margin-bottom:6px; }
+  .legal-body a { color:var(--salvia); }
+  .legal-fill { background:rgba(201,168,76,0.16); color:#8a6d12; border-radius:5px; padding:1px 7px; font-size:12.5px; font-weight:500; }
+  .legal-table { width:100%; border-collapse:collapse; margin:8px 0 22px; font-size:13.5px; }
+  .legal-table th, .legal-table td { text-align:left; padding:10px 12px; border-bottom:1px solid rgba(45,59,45,0.1); vertical-align:top; font-weight:300; color:var(--verde); }
+  .legal-table th { font-weight:500; opacity:0.7; font-size:12px; text-transform:uppercase; letter-spacing:0.04em; }
+  .contact-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:24px 0; }
+  .contact-item { background:var(--blanco); border:1px solid rgba(45,59,45,0.08); border-radius:14px; padding:18px 20px; }
+  .contact-item .clabel { font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--dorado); margin-bottom:6px; }
+  .contact-item .cval { font-size:14.5px; color:var(--verde); }
 
-  .admin-card { background:var(--blanco); border:1px solid rgba(45,59,45,0.08); border-radius:20px; padding:28px 32px; margin-bottom:28px; }
-  .admin-card h3 { font-size:16px; font-weight:500; color:var(--verde); margin-bottom:18px; }
-  .admin-form { display:grid; grid-template-columns:1fr 120px 1fr auto; gap:14px; align-items:end; }
-  .admin-field label { display:block; font-size:12px; color:var(--verde); opacity:0.7; margin-bottom:6px; letter-spacing:0.02em; }
-  .admin-field select, .admin-field input { width:100%; padding:12px 14px; border:1px solid rgba(45,59,45,0.2); border-radius:12px; font-size:14px; font-family:'Poppins',sans-serif; background:var(--crema); color:var(--verde); }
-  .admin-field select:focus, .admin-field input:focus { outline:none; border-color:var(--dorado); }
-  .btn-admin { background:var(--verde); color:var(--crema); border:none; border-radius:12px; padding:0 24px; height:46px; font-size:14px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:background 0.2s; }
-  .btn-admin:hover { background:var(--salvia); }
-  .btn-admin:disabled { opacity:0.5; cursor:not-allowed; }
-  .admin-msg { font-size:13px; padding:12px 14px; border-radius:10px; margin-top:16px; display:none; }
-  .admin-msg.error { display:block; background:#FCEBEB; color:#A32D2D; }
-  .admin-msg.ok { display:block; background:#EAF3DE; color:#3B6D11; }
-  .codigos-result { margin-top:18px; display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
-  .codigos-result:empty { margin-top:0; }
-  .codigo-chip { background:var(--crema); border:1px solid rgba(201,168,76,0.45); border-radius:10px; padding:10px 12px; font-size:14px; font-weight:500; letter-spacing:0.06em; color:var(--verde); text-align:center; }
-  .admin-filter { display:flex; gap:12px; align-items:end; margin-bottom:18px; flex-wrap:wrap; }
-  .admin-stats { font-size:13px; color:var(--verde); opacity:0.7; margin-bottom:14px; }
-  .admin-table { width:100%; border-collapse:collapse; font-size:13px; }
-  .admin-table th { text-align:left; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--dorado); font-weight:500; padding:10px 12px; border-bottom:1px solid rgba(45,59,45,0.1); }
-  .admin-table td { padding:11px 12px; border-bottom:1px solid rgba(45,59,45,0.06); color:var(--verde); }
-  .admin-table tr:hover td { background:var(--crema); }
-  .codigo-mono { font-weight:500; letter-spacing:0.06em; }
-  .estado-libre { color:#3B6D11; font-weight:500; }
-  .estado-usado { color:#A85040; font-weight:500; }
-  .admin-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
-  .admin-tab { background:var(--crema); border:1px solid rgba(45,59,45,0.15); color:var(--verde); border-radius:99px; padding:8px 16px; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; transition:all 0.2s; }
-  .admin-tab:hover { border-color:var(--dorado); }
-  .admin-tab.active { background:var(--verde); color:var(--crema); border-color:var(--verde); }
-  .btn-row-act { background:none; border:1px solid rgba(45,59,45,0.2); border-radius:8px; padding:5px 10px; font-size:12px; font-family:'Poppins',sans-serif; color:var(--verde); cursor:pointer; transition:all 0.15s; white-space:nowrap; }
-  .btn-row-act:hover { border-color:var(--dorado); }
-  .btn-row-act.danger { color:#A85040; border-color:rgba(168,80,64,0.3); }
-  .btn-row-act.danger:hover { background:#A85040; color:#fff; border-color:#A85040; }
-  input[type=checkbox].kcheck { width:17px; height:17px; accent-color:var(--verde); cursor:pointer; vertical-align:middle; }
-  .admin-table th.col-check, .admin-table td.col-check { width:36px; text-align:center; }
-  .admin-bulk { display:none; align-items:center; gap:12px; flex-wrap:wrap; background:var(--crema2); border:1px solid rgba(201,168,76,0.45); border-radius:12px; padding:10px 14px; margin-bottom:14px; }
-  .admin-bulk.show { display:flex; }
-  .admin-bulk .bulk-count { font-size:13px; font-weight:600; color:var(--verde); }
+  /* RECETA */
+  .receta-wrap { max-width:860px; margin:0 auto; padding:120px 32px 90px; }
+  .receta-back { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--salvia); cursor:pointer; margin-bottom:24px; letter-spacing:0.02em; transition:color 0.2s; }
+  .receta-back:hover { color:var(--verde); }
+  .receta-hero { display:flex; gap:28px; align-items:center; background:var(--blanco); border:1px solid rgba(45,59,45,0.08); border-radius:24px; padding:28px 32px; margin-bottom:36px; flex-wrap:wrap; }
+  .receta-emoji { width:120px; height:120px; border-radius:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .receta-emoji svg { width:88px; height:88px; }
+  .receta-head-info { flex:1; min-width:220px; }
+  .receta-head-info .rbadge { display:inline-block; font-size:10px; font-weight:500; letter-spacing:0.1em; padding:4px 12px; border-radius:99px; text-transform:uppercase; margin-bottom:10px; }
+  .receta-title { font-size:clamp(26px,4vw,38px); font-weight:600; letter-spacing:-0.02em; color:var(--verde); line-height:1.1; margin-bottom:8px; }
+  .receta-intro { font-size:14px; font-weight:300; color:var(--verde); opacity:0.7; line-height:1.7; margin-bottom:14px; }
+  .receta-meta { display:flex; gap:22px; flex-wrap:wrap; }
+  .receta-meta div { font-size:12px; color:var(--verde); }
+  .receta-meta .mlabel { color:var(--dorado); letter-spacing:0.08em; text-transform:uppercase; font-size:10px; margin-bottom:2px; }
+  .receta-meta .mval { font-weight:500; font-size:14px; }
 
-  @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:768px){ nav{padding:16px 24px;} .nav-toggle{display:flex;} .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--crema);border-bottom:1px solid rgba(45,59,45,0.08);padding:0 24px;max-height:0;overflow:hidden;transition:max-height 0.3s ease;} .nav-links.open{max-height:80vh;padding:8px 24px 18px;} .nav-links a,.nav-links .btn-nav{width:100%;padding:15px 4px;border-bottom:1px solid rgba(45,59,45,0.06);text-align:left;border-radius:0;font-size:15px;} .nav-links .btn-nav{background:none;color:var(--verde);font-weight:500;} .nav-links a:last-child,.nav-links .btn-nav:last-child{border-bottom:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} .canjear-box{flex-direction:column;align-items:flex-start;} .canjear-form{width:100%;flex-wrap:wrap;} .canjear-form input{flex:1 1 100%;width:auto;} .canjear-form .btn-canjear,.canjear-form .btn-scan{flex:1;} .admin-card{padding:22px 18px;} .admin-form{grid-template-columns:1fr;} }
+  .serv-bar { background:var(--crema2); border-radius:18px; padding:20px 24px; margin-bottom:32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+  .serv-bar .serv-label { font-size:13px; font-weight:500; color:var(--verde); }
+  .serv-bar .serv-label span { display:block; font-size:11px; font-weight:300; opacity:0.6; margin-top:2px; }
+  .serv-opts { display:flex; gap:8px; flex-wrap:wrap; }
+  .serv-opt { width:46px; height:46px; border-radius:50%; border:1.5px solid rgba(45,59,45,0.18); background:var(--blanco); color:var(--verde); font-family:'Poppins',sans-serif; font-size:15px; font-weight:500; cursor:pointer; transition:all 0.18s; }
+  .serv-opt:hover { border-color:var(--dorado); }
+  .serv-opt.active { background:var(--verde); color:var(--crema); border-color:var(--verde); transform:scale(1.06); }
+
+  .receta-cols { display:grid; grid-template-columns:1fr 1.3fr; gap:40px; align-items:start; }
+  .receta-block h3 { font-size:13px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--dorado); margin-bottom:18px; }
+  .ing-list { list-style:none; }
+  .ing-list li { display:flex; justify-content:space-between; gap:12px; padding:11px 0; border-bottom:1px solid rgba(45,59,45,0.08); font-size:14px; }
+  .ing-list li .ing-name { font-weight:300; color:var(--verde); }
+  .ing-list li .ing-qty { font-weight:500; color:var(--verde); white-space:nowrap; }
+  .ing-list li.fixed .ing-qty::after { content:' ·fijo'; font-size:10px; color:var(--salvia); font-weight:400; letter-spacing:0.04em; }
+  .uten-list { list-style:none; margin-top:24px; }
+  .uten-list li { font-size:13px; font-weight:300; color:var(--verde); opacity:0.8; padding:5px 0 5px 18px; position:relative; }
+  .uten-list li::before { content:'·'; position:absolute; left:4px; color:var(--dorado); font-weight:700; }
+  .pasos-list { list-style:none; counter-reset:paso; }
+  .paso-item { display:flex; gap:16px; padding-bottom:26px; position:relative; }
+  .paso-item:not(:last-child)::before { content:''; position:absolute; left:17px; top:38px; bottom:6px; width:1px; background:rgba(201,168,76,0.3); }
+  .paso-circle { width:36px; height:36px; border-radius:50%; background:var(--verde); color:var(--crema); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:600; flex-shrink:0; z-index:1; }
+  .paso-text { font-size:14.5px; font-weight:300; color:var(--verde); line-height:1.7; padding-top:6px; }
+  .paso-consejo { display:block; margin-top:8px; font-size:13px; color:var(--salvia); background:#EBF2EB; border-radius:10px; padding:8px 12px; line-height:1.5; }
+  .receta-consejos { background:var(--verde); color:var(--crema); border-radius:20px; padding:28px 32px; margin-top:44px; }
+  .receta-consejos h3 { color:var(--dorado); margin-bottom:14px; }
+  .receta-consejos ul { list-style:none; }
+  .receta-consejos li { font-size:14px; font-weight:300; opacity:0.85; line-height:1.7; padding:6px 0 6px 20px; position:relative; }
+  .receta-consejos li::before { content:'✦'; position:absolute; left:0; color:var(--dorado); font-size:12px; }
+  .receta-plantilla { margin-top:36px; text-align:center; }
+  .alergenos { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .alergeno-tag { font-size:11px; background:#FDF0ED; color:#A85040; padding:4px 12px; border-radius:99px; letter-spacing:0.02em; }
+
+  @media (max-width:900px){ .kits-grid,.insignias-grid,.badge-grid{grid-template-columns:repeat(2,1fr);} .contact-grid{grid-template-columns:1fr;} .receta-cols{grid-template-columns:1fr;gap:32px;} }
+  @media (max-width:768px){ nav{padding:16px 24px;} .nav-links a:not(.always){display:none;} section{padding:70px 24px;} .concepto{grid-template-columns:1fr;gap:40px;} .pasos{grid-template-columns:1fr;} .paso::after{display:none;} footer{flex-direction:column;padding:32px 24px;} .dash{padding:90px 24px 60px;} }
 </style>
 </head>
 <body>
 
+<!-- ============ NAV ============ -->
 <nav>
   <div onclick="go('landing')" style="cursor:pointer;">
     <div class="nav-logo">KRE<span>A</span>NDO</div>
     <div class="nav-tagline">Sorpresas que se saborean</div>
   </div>
-  <button class="nav-toggle" id="nav-toggle" onclick="toggleMenu()" aria-label="Abrir menú">
-    <span></span><span></span><span></span>
-  </button>
   <div class="nav-links" id="nav-links"></div>
 </nav>
 
+<!-- ============ LANDING ============ -->
 <div id="view-landing" class="view active">
   <section class="hero">
     <div class="hero-confetti">
@@ -263,7 +253,7 @@
     <h1 class="hero-title">Abre.<br/>Descubre.<br/><em>Disfruta.</em></h1>
     <p class="hero-sub">Kits de ingredientes para crear momentos únicos en familia. Cada temporada, una sorpresa nueva.</p>
     <div class="hero-ctas">
-      <a class="btn-primary landing-cta" data-guest="Crear mi cuenta" onclick="ctaCuenta()">Crear mi cuenta</a>
+      <a class="btn-primary" onclick="go('registro')">Crear mi cuenta</a>
       <a class="btn-secondary" href="#kits">Ver kits</a>
     </div>
     <div class="hero-scroll"><span>Descubrir</span><div class="scroll-line"></div></div>
@@ -294,8 +284,15 @@
   </section>
 
   <section class="kits" id="kits">
-    <div class="kits-header"><div><p class="section-label">Catálogo</p><h2 class="section-title">Kits de temporada</h2></div></div>
-    <div class="kits-grid" id="landing-kits"></div>
+    <div class="kits-header">
+      <div><p class="section-label">Catálogo</p><h2 class="section-title">Kits de temporada</h2></div>
+    </div>
+    <div class="kits-grid">
+      <div class="kit-card"><div class="kit-img" style="background:#FDF0ED;"><svg viewBox="0 0 52 52" fill="none"><ellipse cx="26" cy="31" rx="15" ry="13" fill="#D4857A"/><ellipse cx="26" cy="30" rx="12" ry="10" fill="#C06B60"/><path d="M16 27 Q18 21 21 23 Q22 19 26 20 Q30 19 31 23 Q34 21 36 27Z" fill="#A85448"/><ellipse cx="21" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><ellipse cx="31" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><path d="M20 32 Q23 35.5 26 35.5 Q29 35.5 32 32" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M24 18 C23 13 18 11 18 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><path d="M28 18 C29 13 33 11 33 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="26" cy="18" rx="3.5" ry="2.5" fill="#6B8F6B"/></svg><span class="kit-badge badge-halloween">Halloween</span></div><div class="kit-body"><div class="kit-name">Calabaza de gominolas</div><div class="kit-desc">Construye una calabaza perfecta con gominolas. Nivel 1.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
+      <div class="kit-card"><div class="kit-img" style="background:#EBF2EB;"><svg viewBox="0 0 52 52" fill="none"><rect x="22" y="37" width="8" height="7" rx="2" fill="#8B6914"/><polygon points="26,9 35,25 17,25" fill="#6B8F6B"/><polygon points="26,18 37,35 15,35" fill="#4A7A4A"/><circle cx="20" cy="22" r="2.2" fill="#C9A84C"/><circle cx="32" cy="22" r="2.2" fill="#D4857A"/><circle cx="17" cy="30" r="2.2" fill="#D4857A"/><circle cx="26" cy="32" r="2.2" fill="#C9A84C"/><circle cx="35" cy="30" r="2.2" fill="#C9A84C"/><polygon points="26,6 27.4,10 31.5,10 28.2,12.5 29.5,16.5 26,14 22.5,16.5 23.8,12.5 20.5,10 24.6,10" fill="#C9A84C"/></svg><span class="kit-badge badge-navidad">Navidad</span></div><div class="kit-body"><div class="kit-name">Árbol de Navidad</div><div class="kit-desc">Un árbol navideño comestible con estrella dorada. Nivel 2.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
+      <div class="kit-card"><div class="kit-img" style="background:#FDF0F2;"><svg viewBox="0 0 52 52" fill="none"><rect x="23" y="39" width="6" height="7" rx="1.5" fill="#A84060"/><circle cx="26" cy="23" r="13" fill="#D4857A"/><circle cx="26" cy="23" r="9" fill="#C06B60"/><path d="M26 14 C24 11 20 11 18 13 C16 15 17 18 19 19 C17 19 15 21 16 24 C17 27 20 28 22 27 C21 29 22 32 25 32 C28 32 29 29 28 27 C30 28 33 27 34 24 C35 21 33 19 31 19 C33 18 34 15 32 13 C30 11 27 11 26 14Z" fill="#D4857A"/><circle cx="26" cy="23" r="4" fill="#A84060"/><path d="M26 39 C26 39 22 35 20 31" stroke="#6B8F6B" stroke-width="2" stroke-linecap="round" fill="none"/><ellipse cx="18" cy="34" rx="4" ry="3" transform="rotate(-30 18 34)" fill="#6B8F6B"/></svg><span class="kit-badge badge-santjordi">Sant Jordi</span></div><div class="kit-body"><div class="kit-name">Rosa de Sant Jordi</div><div class="kit-desc">Una rosa dulce para regalar el 23 de abril. Nivel 1.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
+      <div class="kit-card"><div class="kit-img" style="background:#FDF5E8;"><svg viewBox="0 0 52 52" fill="none"><rect x="14" y="28" width="24" height="16" rx="3" fill="#C9A84C"/><rect x="14" y="28" width="24" height="7" rx="3" fill="#D4A820"/><rect x="12" y="26" width="28" height="5" rx="2.5" fill="#D4A820"/><rect x="24" y="18" width="4" height="10" rx="2" fill="#C9A84C"/><path d="M26 18 C26 18 20 14 18 10 C16 6 20 4 22 7 C24 10 26 18 26 18Z" fill="#D4857A"/><path d="M26 18 C26 18 32 14 34 10 C36 6 32 4 30 7 C28 10 26 18 26 18Z" fill="#6B8F6B"/><circle cx="20" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="26" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="32" cy="30" r="1.5" fill="#F5F0E8"/></svg><span class="kit-badge badge-cumple">Cumpleaños</span></div><div class="kit-body"><div class="kit-name">Tarta de cumpleaños</div><div class="kit-desc">La tarta perfecta para celebrar, con sorpresa en el centro. Nivel 3.</div><div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>
+    </div>
   </section>
 
   <section class="insignias" id="insignias">
@@ -305,21 +302,22 @@
       <p class="section-sub" style="margin:0 auto;">Cada logro desbloquea una insignia única. Cuanto más difícil, más espectacular. Acumúlalas para descuentos y sorteos.</p>
     </div>
     <div class="insignias-grid" id="landing-badges"></div>
-    <div class="insignias-cta"><a class="btn-primary landing-cta" data-guest="Crear mi cuenta gratis" onclick="ctaCuenta()">Crear mi cuenta gratis</a></div>
+    <div class="insignias-cta"><a class="btn-primary" onclick="go('registro')">Crear mi cuenta gratis</a></div>
   </section>
 
   <section class="cierre">
     <h2 class="cierre-title">Sorpresas que<br/><em>se saborean.</em></h2>
     <p>Una experiencia gourmet para compartir con quienes más quieres. En cada temporada, una nueva razón para crear juntos.</p>
-    <a class="btn-primary landing-cta" style="background:var(--dorado);color:var(--verde);" data-guest="Empezar ahora" onclick="ctaCuenta()">Empezar ahora</a>
+    <a class="btn-primary" style="background:var(--dorado);color:var(--verde);" onclick="go('registro')">Empezar ahora</a>
   </section>
 
   <footer>
     <div><div class="footer-logo">KRE<span>A</span>NDO</div><div class="footer-copy" style="margin-top:4px;">© 2025 Kreando · kreando.shop</div></div>
-    <div class="footer-links"><a>Aviso legal</a><a>Privacidad</a><a>Contacto</a></div>
+    <div class="footer-links"><a onclick="go('legal')">Aviso legal</a><a onclick="go('privacidad')">Privacidad</a><a onclick="go('cookies')">Cookies</a><a onclick="go('contacto')">Contacto</a></div>
   </footer>
 </div>
 
+<!-- ============ LOGIN ============ -->
 <div id="view-login" class="view">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -336,6 +334,7 @@
   </div>
 </div>
 
+<!-- ============ REGISTRO ============ -->
 <div id="view-registro" class="view">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -353,6 +352,7 @@
   </div>
 </div>
 
+<!-- ============ DASHBOARD ============ -->
 <div id="view-app" class="view">
   <div class="dash">
     <div class="dash-top">
@@ -360,135 +360,199 @@
       <button class="btn-secondary" onclick="doLogout()">Cerrar sesión</button>
     </div>
 
-    <div class="canjear-box">
-      <div class="canjear-info">
-        <h3>¿Tienes un kit nuevo?</h3>
-        <p>Introduce el código de tu caja para desbloquear la receta y ganar tu insignia.</p>
-      </div>
-      <div class="canjear-form">
-        <input type="text" id="codigo-input" placeholder="KRE-XXXX-XXXX" />
-        <button class="btn-canjear" id="canjear-btn" onclick="canjearCodigo()">Canjear</button>
-        <button class="btn-scan" id="canjear-scan-btn" onclick="openScanner()">⊡ Escanear</button>
-      </div>
-      <div id="canjear-msg" class="canjear-msg"></div>
-    </div>
-
     <p class="dash-section-label">Mis kits</p>
-    <div id="mis-kits"></div>
+    <div id="mis-kits">
+      <div class="empty-card">
+        <p>Aún no has canjeado ningún kit.<br/>Cuando compres una caja, introduce su código para desbloquear la receta.</p>
+        <a class="btn-primary" style="opacity:0.5;cursor:not-allowed;">Canjear código (próximamente)</a>
+      </div>
+    </div>
 
     <p class="dash-section-label">Mis insignias</p>
     <div class="badge-grid" id="mis-insignias"></div>
   </div>
 </div>
 
-<div id="view-admin" class="view">
-  <div class="dash">
-    <div class="dash-top">
-      <div class="dash-greet"><h2>Panel de administración</h2><p>Genera y consulta los códigos de los kits.</p></div>
-      <button class="btn-secondary" onclick="go('app')">← Mi cuenta</button>
-    </div>
-
-    <div class="admin-card">
-      <h3>Generar códigos</h3>
-      <div class="admin-form">
-        <div class="admin-field"><label>Kit</label><select id="admin-kit"></select></div>
-        <div class="admin-field"><label>Cantidad</label><input type="number" id="admin-cantidad" min="1" max="500" value="10" /></div>
-        <div class="admin-field"><label>Etiqueta de lote</label><input type="text" id="admin-lote" placeholder="Ej. Navidad-2025" /></div>
-        <button class="btn-admin" id="admin-gen-btn" onclick="generarCodigosAdmin()">Generar</button>
-      </div>
-      <div id="admin-msg" class="admin-msg"></div>
-      <div id="admin-result" class="codigos-result"></div>
-    </div>
-
-    <div class="admin-card">
-      <h3>Códigos existentes</h3>
-      <div class="admin-filter">
-        <div class="admin-field" style="flex:1;min-width:180px;"><label>Filtrar por lote</label><input type="text" id="admin-filter-lote" placeholder="Vacío = ver todos" /></div>
-        <button class="btn-admin" onclick="cargarCodigosAdmin()">Buscar</button>
-        <button class="btn-admin" id="admin-pdf-btn" style="background:var(--dorado);color:var(--verde);" onclick="descargarQRsPDF()">⤓ Descargar QRs (PDF)</button>
-      </div>
-      <div id="admin-pdf-msg" class="admin-msg"></div>
-      <div class="admin-tabs">
-        <button class="admin-tab active" id="tab-sincanjear" onclick="setAdminTab('sincanjear')">Sin canjear</button>
-        <button class="admin-tab" id="tab-canjeados" onclick="setAdminTab('canjeados')">Canjeados</button>
-        <button class="admin-tab" id="tab-eliminados" onclick="setAdminTab('eliminados')">Eliminados</button>
-      </div>
-      <div id="admin-stats" class="admin-stats"></div>
-      <div class="admin-bulk" id="admin-bulk">
-        <span class="bulk-count" id="bulk-count">0 seleccionados</span>
-        <span id="bulk-actions"></span>
-        <button class="btn-row-act" onclick="limpiarSeleccion()">Quitar selección</button>
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="admin-table">
-          <thead><tr><th class="col-check"><input type="checkbox" class="kcheck" id="check-all" onchange="toggleSelAll(this.checked)" /></th><th>Código</th><th>Kit</th><th>Lote</th><th>Estado</th><th>Acciones</th></tr></thead>
-          <tbody id="admin-tbody"></tbody>
-        </table>
-      </div>
+<!-- ============ AVISO LEGAL ============ -->
+<div id="view-legal" class="view">
+  <div class="legal-wrap">
+    <a class="legal-back" onclick="go('landing')">← Volver al inicio</a>
+    <p class="legal-eyebrow">Información legal</p>
+    <h1 class="legal-title">Aviso legal</h1>
+    <p class="legal-updated">Última actualización: <span class="legal-fill">[RELLENAR: fecha]</span></p>
+    <div class="legal-disclaimer"><strong>Borrador de plantilla, no asesoramiento legal.</strong> Texto genérico para tienda online española (LSSI-CE). Rellena los campos marcados y revísalo con un profesional antes de publicar.</div>
+    <div class="legal-body">
+      <h3>1. Datos identificativos del titular</h3>
+      <p>En cumplimiento del artículo 10 de la Ley 34/2002 (LSSI-CE), se informa de los datos del titular de kreando.shop:</p>
+      <ul>
+        <li><strong>Titular / Denominación fiscal:</strong> <span class="legal-fill">[RELLENAR: nombre o razón social]</span></li>
+        <li><strong>NIF / CIF:</strong> <span class="legal-fill">[RELLENAR]</span></li>
+        <li><strong>Domicilio fiscal:</strong> <span class="legal-fill">[RELLENAR: dirección postal]</span></li>
+        <li><strong>Correo electrónico:</strong> <span class="legal-fill">[RELLENAR: ej. hola@kreando.shop]</span></li>
+        <li><strong>Teléfono:</strong> <span class="legal-fill">[RELLENAR: opcional]</span></li>
+        <li><strong>Dominio:</strong> kreando.shop</li>
+        <li><strong>Datos registrales:</strong> <span class="legal-fill">[RELLENAR: solo si es sociedad]</span></li>
+      </ul>
+      <h3>2. Objeto</h3>
+      <p>Este Aviso Legal regula el uso de kreando.shop. La navegación atribuye la condición de usuario e implica la aceptación de estas cláusulas. A través del Sitio Web, Kreando ofrece la venta de kits de ingredientes gourmet de temporada, el acceso por código QR a recetas digitales y un sistema de insignias coleccionables vinculado a una cuenta.</p>
+      <h3>3. Condiciones de acceso y uso</h3>
+      <p>El usuario se compromete a hacer un uso adecuado de los contenidos y a no emplearlos para fines ilícitos o contrarios a la buena fe. El acceso a ciertas funciones requiere registro; el usuario es responsable de la confidencialidad de sus credenciales. Los códigos de kit son de <strong>un solo uso</strong>: una vez canjeados quedan asociados a la cuenta y no pueden reutilizarse.</p>
+      <h3>4. Propiedad intelectual e industrial</h3>
+      <p>Todos los contenidos (textos, fotografías, gráficos, logotipos, diseño, recetas, código, marca «Kreando» e insignias) son titularidad de <span class="legal-fill">[RELLENAR: titular]</span> o de terceros que han autorizado su uso. Queda prohibida su reproducción o explotación sin autorización expresa y por escrito.</p>
+      <h3>5. Exclusión de responsabilidad</h3>
+      <p>El titular no se responsabiliza de los daños derivados de un uso inadecuado del Sitio Web, interrupciones del servicio, virus introducidos por terceros ni contenidos de webs externas enlazadas.</p>
+      <p><strong>Alérgenos y seguridad alimentaria:</strong> la información de ingredientes y alérgenos es orientativa; consulta siempre el etiquetado físico del producto antes de consumirlo. <span class="legal-fill">[RELLENAR: confirmar con asesor en seguridad alimentaria]</span></p>
+      <h3>6. Legislación aplicable y jurisdicción</h3>
+      <p>Se aplica la legislación española. Para cualquier controversia, las partes se someten a los Juzgados y Tribunales de <span class="legal-fill">[RELLENAR: localidad]</span>, salvo fuero imperativo de consumidores.</p>
     </div>
   </div>
 </div>
 
-<div id="scanner-overlay" class="scanner-overlay">
-  <div class="scanner-card">
-    <div class="scanner-head">
-      <h3>Escanea el QR de tu caja</h3>
-      <button class="scanner-close" onclick="closeScanner()" aria-label="Cerrar">✕</button>
+<!-- ============ PRIVACIDAD ============ -->
+<div id="view-privacidad" class="view">
+  <div class="legal-wrap">
+    <a class="legal-back" onclick="go('landing')">← Volver al inicio</a>
+    <p class="legal-eyebrow">Información legal</p>
+    <h1 class="legal-title">Política de privacidad</h1>
+    <p class="legal-updated">Última actualización: <span class="legal-fill">[RELLENAR: fecha]</span></p>
+    <div class="legal-disclaimer"><strong>Borrador de plantilla, no asesoramiento legal.</strong> Base genérica conforme al RGPD (UE 2016/679) y la LOPDGDD. Rellena los campos y revísalo con un profesional antes de publicar.</div>
+    <div class="legal-body">
+      <h3>1. Responsable del tratamiento</h3>
+      <ul>
+        <li><strong>Responsable:</strong> <span class="legal-fill">[RELLENAR: titular]</span></li>
+        <li><strong>NIF / CIF:</strong> <span class="legal-fill">[RELLENAR]</span></li>
+        <li><strong>Domicilio:</strong> <span class="legal-fill">[RELLENAR]</span></li>
+        <li><strong>Correo de privacidad:</strong> <span class="legal-fill">[RELLENAR: ej. privacidad@kreando.shop]</span></li>
+      </ul>
+      <h3>2. ¿Qué datos recogemos?</h3>
+      <table class="legal-table">
+        <tr><th>Finalidad</th><th>Datos tratados</th></tr>
+        <tr><td>Registro y gestión de cuenta</td><td>Nombre, correo, contraseña (cifrada)</td></tr>
+        <tr><td>Canje de códigos y recetas</td><td>Códigos canjeados, insignias, actividad</td></tr>
+        <tr><td>Compra (si aplica)</td><td><span class="legal-fill">[RELLENAR: facturación y envío]</span></td></tr>
+        <tr><td>Atención al cliente</td><td>Datos de las comunicaciones</td></tr>
+        <tr><td>Comunicaciones comerciales (opcional)</td><td>Correo, con consentimiento</td></tr>
+      </table>
+      <p>El registro y la autenticación se gestionan mediante <strong>Supabase</strong>, que actúa como encargado del tratamiento.</p>
+      <h3>3. Finalidad y base jurídica</h3>
+      <ul>
+        <li><strong>Gestión de cuenta y servicio:</strong> ejecución de contrato (art. 6.1.b RGPD).</li>
+        <li><strong>Compras y obligaciones fiscales:</strong> ejecución de contrato y obligación legal (art. 6.1.b y 6.1.c).</li>
+        <li><strong>Comunicaciones comerciales:</strong> consentimiento revocable (art. 6.1.a).</li>
+        <li><strong>Analítica web:</strong> interés legítimo o consentimiento según las cookies (ver Política de Cookies).</li>
+      </ul>
+      <h3>4. Plazo de conservación</h3>
+      <p>Se conservan mientras la cuenta esté activa. Tras la baja, quedan bloqueados durante los plazos legales exigibles <span class="legal-fill">[RELLENAR: ej. hasta 6 años por obligaciones fiscales]</span> y después se suprimen.</p>
+      <h3>5. ¿A quién comunicamos los datos?</h3>
+      <p>No se ceden datos salvo obligación legal. Se usan proveedores (encargados del tratamiento) como Supabase (auth y base de datos), Vercel (alojamiento) y <span class="legal-fill">[RELLENAR: pasarela de pago, email, logística]</span>. Si algún proveedor trata datos fuera del EEE, se garantizarán las garantías adecuadas. <span class="legal-fill">[RELLENAR: confirmar transferencias internacionales]</span></p>
+      <h3>6. Derechos del usuario</h3>
+      <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad, y retirar el consentimiento, escribiendo a <span class="legal-fill">[RELLENAR: correo de privacidad]</span>. También puedes reclamar ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).</p>
+      <h3>7. Seguridad</h3>
+      <p>Se aplican medidas técnicas y organizativas. Las contraseñas se almacenan cifradas y nunca se exponen claves secretas en el frontend. El acceso a la base de datos se protege con políticas RLS en Supabase. <span class="legal-fill">[RELLENAR: verificar que RLS está activo en todas las tablas]</span></p>
+      <h3>8. Menores de edad</h3>
+      <p><span class="legal-fill">[RELLENAR: definir política — recomendación: servicio para mayores de 14 años; menores requieren consentimiento parental conforme al art. 7 LOPDGDD]</span></p>
     </div>
-    <div id="qr-reader"></div>
-    <p class="scanner-hint" id="scanner-hint">Apunta la cámara al código QR de tu kit.</p>
   </div>
 </div>
 
-<div id="confirm-overlay" class="modal-overlay">
-  <div class="modal-card">
-    <div class="modal-eyebrow">Canjear kit</div>
-    <h2 class="modal-title" id="confirm-code">KRE-XXXX-XXXX</h2>
-    <p class="modal-text">¿Quieres canjear este código y desbloquear tu receta e insignia?</p>
-    <div class="confirm-actions">
-      <button class="modal-btn" id="confirm-yes" onclick="confirmarCanjeo()">Canjear ahora</button>
-      <button class="modal-btn ghost" onclick="closeConfirm()">Cancelar</button>
+<!-- ============ COOKIES ============ -->
+<div id="view-cookies" class="view">
+  <div class="legal-wrap">
+    <a class="legal-back" onclick="go('landing')">← Volver al inicio</a>
+    <p class="legal-eyebrow">Información legal</p>
+    <h1 class="legal-title">Política de cookies</h1>
+    <p class="legal-updated">Última actualización: <span class="legal-fill">[RELLENAR: fecha]</span></p>
+    <div class="legal-disclaimer"><strong>Borrador de plantilla, no asesoramiento legal.</strong> Hoy la web solo usa almacenamiento técnico necesario (sesión de Supabase), exento de consentimiento. Si añades analítica o marketing, será obligatorio un banner de consentimiento previo.</div>
+    <div class="legal-body">
+      <h3>1. ¿Qué son las cookies?</h3>
+      <p>Una cookie es un pequeño archivo que un sitio web guarda en tu dispositivo para recordar información de tu visita. Se incluyen aquí tecnologías similares como el almacenamiento local del navegador.</p>
+      <h3>2. Cookies utilizadas en kreando.shop</h3>
+      <table class="legal-table">
+        <tr><th>Cookie / almacenamiento</th><th>Tipo</th><th>Finalidad</th><th>Duración</th></tr>
+        <tr><td>Sesión de Supabase</td><td>Técnica (necesaria)</td><td>Mantener la sesión iniciada</td><td><span class="legal-fill">[RELLENAR]</span></td></tr>
+        <tr><td><span class="legal-fill">[RELLENAR: analítica, si se añade]</span></td><td>Analítica</td><td>Medir el uso del sitio</td><td><span class="legal-fill">[RELLENAR]</span></td></tr>
+      </table>
+      <h3>3. Consentimiento</h3>
+      <p>Las cookies técnicas no requieren consentimiento. Cualquier cookie analítica, de personalización o publicitaria requiere consentimiento previo, informado y revocable mediante un banner que permita aceptar, rechazar y configurar de forma granular (Guía de Cookies de la AEPD). <span class="legal-fill">[RELLENAR: implementar banner si se instalan cookies no necesarias]</span></p>
+      <h3>4. Cómo gestionar o eliminar cookies</h3>
+      <p>Puedes configurar o eliminar las cookies desde los ajustes de tu navegador (Chrome, Firefox, Safari, Edge).</p>
     </div>
   </div>
 </div>
 
-<div id="modal-overlay" class="modal-overlay">
-  <div class="modal-card" id="modal-card">
-    <div class="modal-confetti" id="modal-confetti"></div>
-    <div class="modal-visual" id="modal-visual"></div>
-    <div class="modal-eyebrow" id="modal-eyebrow"></div>
-    <h2 class="modal-title" id="modal-title"></h2>
-    <p class="modal-text" id="modal-text"></p>
-    <button class="modal-btn" id="modal-btn" onclick="nextModalStep()">Continuar</button>
+<!-- ============ CONTACTO ============ -->
+<div id="view-contacto" class="view">
+  <div class="legal-wrap">
+    <a class="legal-back" onclick="go('landing')">← Volver al inicio</a>
+    <p class="legal-eyebrow">Estamos aquí</p>
+    <h1 class="legal-title">¿Hablamos?</h1>
+    <div class="legal-body">
+      <p>¿Tienes una duda sobre un kit, un problema con un código o una propuesta? Nos encanta ayudarte.</p>
+      <div class="contact-grid">
+        <div class="contact-item"><div class="clabel">Correo</div><div class="cval"><span class="legal-fill">[RELLENAR: hola@kreando.shop]</span></div></div>
+        <div class="contact-item"><div class="clabel">Horario</div><div class="cval"><span class="legal-fill">[RELLENAR: L-V 9:00–18:00]</span></div></div>
+        <div class="contact-item"><div class="clabel">Dirección</div><div class="cval"><span class="legal-fill">[RELLENAR: opcional]</span></div></div>
+        <div class="contact-item"><div class="clabel">Redes sociales</div><div class="cval"><span class="legal-fill">[RELLENAR: Instagram, etc.]</span></div></div>
+      </div>
+      <p style="font-size:13px;opacity:0.65;">Formulario de contacto: <span class="legal-fill">[RELLENAR: requiere conectar envío de correo o tabla en Supabase — ver DECISIONES_PENDIENTES.md]</span></p>
+      <p style="font-size:13px;opacity:0.65;">Los datos que nos facilites se tratarán solo para atender tu consulta, conforme a nuestra <a onclick="go('privacidad')" style="cursor:pointer;">Política de Privacidad</a>.</p>
+    </div>
   </div>
 </div>
 
+<!-- ============ RECETA ============ -->
+<div id="view-receta" class="view">
+  <div class="receta-wrap">
+    <a class="receta-back" id="receta-back" onclick="go('app')">← Volver a mi cuenta</a>
+    <div class="receta-hero">
+      <div class="receta-emoji" id="receta-emoji"></div>
+      <div class="receta-head-info">
+        <span class="rbadge" id="receta-badge"></span>
+        <h1 class="receta-title" id="receta-title"></h1>
+        <p class="receta-intro" id="receta-intro"></p>
+        <div class="receta-meta">
+          <div><div class="mlabel">Dificultad</div><div class="mval" id="receta-dif"></div></div>
+          <div><div class="mlabel">Tiempo</div><div class="mval" id="receta-tiempo"></div></div>
+          <div><div class="mlabel">Alérgenos</div><div class="mval" id="receta-aler"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="serv-bar">
+      <div class="serv-label">¿Para cuántas personas?<span>Las cantidades se ajustan automáticamente.</span></div>
+      <div class="serv-opts" id="serv-opts"></div>
+    </div>
+
+    <div class="receta-cols">
+      <div class="receta-block">
+        <h3>Ingredientes</h3>
+        <ul class="ing-list" id="ing-list"></ul>
+        <ul class="uten-list" id="uten-list"></ul>
+      </div>
+      <div class="receta-block">
+        <h3>Paso a paso</h3>
+        <ul class="pasos-list" id="pasos-list"></ul>
+      </div>
+    </div>
+
+    <div class="receta-consejos" id="receta-consejos-wrap">
+      <h3>Trucos Kreando</h3>
+      <ul id="consejos-list"></ul>
+    </div>
+
+    <div class="receta-plantilla" id="receta-plantilla"></div>
+  </div>
+</div>
+
+<!-- ============ SUPABASE ============ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
+  // ====== CONFIGURACIÓN — pega aquí tus dos valores de Supabase ======
   const SUPABASE_URL = 'https://wcbhnnjvneawwmtxvszy.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_XR7RQHuCQx7YStCR531BGQ_0XSvKgy9';
+  // ===================================================================
+
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const KIT_BG = { 'Halloween':'#FDF0ED', 'Navidad':'#EBF2EB', 'Sant Jordi':'#FDF0F2', 'Cumpleaños':'#FDF5E8' };
-  const KIT_ICONS = {
-    'Halloween':'<ellipse cx="26" cy="31" rx="15" ry="13" fill="#D4857A"/><ellipse cx="26" cy="30" rx="12" ry="10" fill="#C06B60"/><path d="M16 27 Q18 21 21 23 Q22 19 26 20 Q30 19 31 23 Q34 21 36 27Z" fill="#A85448"/><ellipse cx="21" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><ellipse cx="31" cy="26" rx="3" ry="3.5" fill="#1a1a1a"/><path d="M20 32 Q23 35.5 26 35.5 Q29 35.5 32 32" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M24 18 C23 13 18 11 18 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><path d="M28 18 C29 13 33 11 33 11" stroke="#6B8F6B" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="26" cy="18" rx="3.5" ry="2.5" fill="#6B8F6B"/>',
-    'Navidad':'<rect x="22" y="37" width="8" height="7" rx="2" fill="#8B6914"/><polygon points="26,9 35,25 17,25" fill="#6B8F6B"/><polygon points="26,18 37,35 15,35" fill="#4A7A4A"/><circle cx="20" cy="22" r="2.2" fill="#C9A84C"/><circle cx="32" cy="22" r="2.2" fill="#D4857A"/><circle cx="17" cy="30" r="2.2" fill="#D4857A"/><circle cx="26" cy="32" r="2.2" fill="#C9A84C"/><circle cx="35" cy="30" r="2.2" fill="#C9A84C"/><polygon points="26,6 27.4,10 31.5,10 28.2,12.5 29.5,16.5 26,14 22.5,16.5 23.8,12.5 20.5,10 24.6,10" fill="#C9A84C"/>',
-    'Sant Jordi':'<rect x="23" y="39" width="6" height="7" rx="1.5" fill="#A84060"/><circle cx="26" cy="23" r="13" fill="#D4857A"/><circle cx="26" cy="23" r="9" fill="#C06B60"/><path d="M26 14 C24 11 20 11 18 13 C16 15 17 18 19 19 C17 19 15 21 16 24 C17 27 20 28 22 27 C21 29 22 32 25 32 C28 32 29 29 28 27 C30 28 33 27 34 24 C35 21 33 19 31 19 C33 18 34 15 32 13 C30 11 27 11 26 14Z" fill="#D4857A"/><circle cx="26" cy="23" r="4" fill="#A84060"/><path d="M26 39 C26 39 22 35 20 31" stroke="#6B8F6B" stroke-width="2" stroke-linecap="round" fill="none"/><ellipse cx="18" cy="34" rx="4" ry="3" transform="rotate(-30 18 34)" fill="#6B8F6B"/>',
-    'Cumpleaños':'<rect x="14" y="28" width="24" height="16" rx="3" fill="#C9A84C"/><rect x="14" y="28" width="24" height="7" rx="3" fill="#D4A820"/><rect x="12" y="26" width="28" height="5" rx="2.5" fill="#D4A820"/><rect x="24" y="18" width="4" height="10" rx="2" fill="#C9A84C"/><path d="M26 18 C26 18 20 14 18 10 C16 6 20 4 22 7 C24 10 26 18 26 18Z" fill="#D4857A"/><path d="M26 18 C26 18 32 14 34 10 C36 6 32 4 30 7 C28 10 26 18 26 18Z" fill="#6B8F6B"/><circle cx="20" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="26" cy="30" r="1.5" fill="#F5F0E8"/><circle cx="32" cy="30" r="1.5" fill="#F5F0E8"/>'
-  };
-  const KIT_BADGE_CLASS = { 'Halloween':'badge-halloween','Navidad':'badge-navidad','Sant Jordi':'badge-santjordi','Cumpleaños':'badge-cumple' };
-  function kitBg(t){ return KIT_BG[t] || '#F5F0E8'; }
-  function kitIcon(t){ return KIT_ICONS[t] || ''; }
-
-  const CATALOGO = [
-    { nombre:'Calabaza de gominolas', temporada:'Halloween', nivel:1, desc:'Construye una calabaza perfecta con gominolas. Nivel 1.' },
-    { nombre:'Árbol de Navidad', temporada:'Navidad', nivel:2, desc:'Un árbol navideño comestible con estrella dorada. Nivel 2.' },
-    { nombre:'Rosa de Sant Jordi', temporada:'Sant Jordi', nivel:1, desc:'Una rosa dulce para regalar el 23 de abril. Nivel 1.' },
-    { nombre:'Tarta de cumpleaños', temporada:'Cumpleaños', nivel:3, desc:'La tarta perfecta para celebrar, con sorpresa en el centro. Nivel 3.' }
-  ];
 
   const BADGES = [
     { lvl:1, cls:'lvl-1', name:'Kreador novato', desc:'Primer kit canjeado', svg:'<path d="M45 6 L74 18 L74 48 C74 66 61 80 45 86 C29 80 16 66 16 48 L16 18 Z" fill="#C9A84C"/><path d="M45 12 L68 22 L68 48 C68 63 57 75 45 80 C33 75 22 63 22 48 L22 22 Z" fill="#D4A820"/><path d="M45 18 L62 26 L62 48 C62 60 53 70 45 74 C37 70 28 60 28 48 L28 26 Z" fill="#F0C040"/><polygon points="45,30 47.2,37 54.5,37 48.8,41.5 51,48.5 45,44 39,48.5 41.2,41.5 35.5,37 42.8,37" fill="#C9A84C"/><rect x="38" y="85" width="14" height="4" rx="2" fill="#B8920F"/><rect x="36" y="88" width="18" height="14" rx="3" fill="#C9A84C"/><rect x="39" y="91" width="12" height="8" rx="2" fill="#D4A820"/>' },
@@ -496,94 +560,149 @@
     { lvl:3, cls:'lvl-3', name:'Coleccionista', desc:'3 kits distintos', svg:'<path d="M45 6 L74 18 L74 48 C74 66 61 80 45 86 C29 80 16 66 16 48 L16 18 Z" fill="#D4857A"/><path d="M45 12 L68 22 L68 48 C68 63 57 75 45 80 C33 75 22 63 22 48 L22 22 Z" fill="#C06B60"/><path d="M45 18 L62 26 L62 48 C62 60 53 70 45 74 C37 70 28 60 28 48 L28 26 Z" fill="#E8958A"/><polygon points="33,26 34.4,30.5 39,30.5 35.5,33.2 36.9,37.5 33,34.8 29.1,37.5 30.5,33.2 27,30.5 31.6,30.5" fill="#C9A84C"/><polygon points="45,23 46.6,28 51.5,28 47.7,31 49.3,36 45,33 40.7,36 42.3,31 38.5,28 43.4,28" fill="#C9A84C"/><polygon points="57,26 58.4,30.5 63,30.5 59.5,33.2 60.9,37.5 57,34.8 53.1,37.5 54.5,33.2 51,30.5 55.6,30.5" fill="#C9A84C"/><circle cx="38" cy="56" r="3" fill="#C9A84C"/><circle cx="45" cy="58" r="3" fill="#D4A820"/><circle cx="52" cy="56" r="3" fill="#C9A84C"/><rect x="38" y="85" width="14" height="4" rx="2" fill="#A85040"/><rect x="36" y="88" width="18" height="14" rx="3" fill="#D4857A"/><rect x="39" y="91" width="12" height="8" rx="2" fill="#E8958A"/>' },
     { lvl:4, cls:'lvl-4', name:'Kreador experto', desc:'5 kits · sorteos exclusivos', svg:'<path d="M45 4 L76 17 L76 49 C76 68 63 83 45 90 C27 83 14 68 14 49 L14 17 Z" fill="#2D3B2D"/><path d="M45 10 L70 21 L70 49 C70 65 59 78 45 84 C31 78 20 65 20 49 L20 21 Z" fill="#3D5040"/><path d="M45 16 L64 25 L64 49 C64 62 55 73 45 78 C35 73 26 62 26 49 L26 25 Z" fill="#4A6B4A"/><polygon points="45,17 46.8,23 53,23 48,27 50,33 45,29 40,33 42,27 37,23 43.2,23" fill="#C9A84C"/><circle cx="37" cy="57" r="3.5" fill="#C9A84C"/><circle cx="45" cy="60" r="4" fill="#D4A820"/><circle cx="53" cy="57" r="3.5" fill="#C9A84C"/><polygon points="45,36 46,39.2 49.4,39.2 46.7,41.2 47.7,44.4 45,42.4 42.3,44.4 43.3,41.2 40.6,39.2 44,39.2" fill="#C9A84C"/><rect x="38" y="85" width="14" height="4" rx="2" fill="#1a2a1a"/><rect x="35" y="88" width="20" height="14" rx="3" fill="#2D3B2D"/><rect x="38" y="91" width="14" height="8" rx="2" fill="#3D5040"/>' }
   ];
+
   function badgeSVG(b){ return '<svg width="84" height="100" viewBox="0 0 90 108" fill="none">'+b.svg+'</svg>'; }
 
-  function renderLandingKits(){
-    document.getElementById('landing-kits').innerHTML = CATALOGO.map(k =>
-      '<div class="kit-card"><div class="kit-img" style="background:'+kitBg(k.temporada)+';"><svg viewBox="0 0 52 52" fill="none">'+kitIcon(k.temporada)+'</svg>'+
-      '<span class="kit-badge '+(KIT_BADGE_CLASS[k.temporada]||'')+'">'+k.temporada+'</span></div>'+
-      '<div class="kit-body"><div class="kit-name">'+k.nombre+'</div><div class="kit-desc">'+k.desc+'</div>'+
-      '<div class="kit-footer"><span class="kit-sizes">1 · 2 · 4 · 6 · 8 · 10</span><span class="kit-cta">Ver kit →</span></div></div></div>').join('');
-  }
   function renderLandingBadges(){
     document.getElementById('landing-badges').innerHTML = BADGES.map(b =>
-      '<div class="insignia-card">'+badgeSVG(b)+'<span class="insignia-level '+b.cls+'">Nivel '+b.lvl+'</span>'+
-      '<span class="insignia-name">'+b.name+'</span><span class="insignia-desc">'+b.desc+'</span></div>').join('');
+      '<div class="insignia-card">'+badgeSVG(b)+
+      '<span class="insignia-level '+b.cls+'">Nivel '+b.lvl+'</span>'+
+      '<span class="insignia-name">'+b.name+'</span>'+
+      '<span class="insignia-desc">'+b.desc+'</span></div>').join('');
   }
-  function renderMyBadges(levels){
+
+  function renderMyBadges(unlockedLevels){
     document.getElementById('mis-insignias').innerHTML = BADGES.map(b => {
-      const on = levels.includes(b.lvl);
+      const on = unlockedLevels.includes(b.lvl);
       return '<div class="badge-card '+(on?'':'locked')+'">'+badgeSVG(b)+
-        '<span class="bname">'+b.name+'</span><span class="bdesc">'+(on?'Conseguida':b.desc)+'</span></div>';
+        '<span class="bname">'+b.name+'</span>'+
+        '<span class="bdesc">'+(on?'Conseguida':b.desc)+'</span></div>';
     }).join('');
   }
-  function renderMisKits(rows){
-    const cont = document.getElementById('mis-kits');
-    if(!rows || rows.length===0){
-      cont.innerHTML = '<div class="empty-card"><p>Aún no has canjeado ningún kit.<br/>Introduce el código de tu caja arriba para desbloquear tu primera receta.</p></div>';
-      return;
+
+  // ====== RECETA (datos de ejemplo) ======
+  // Estructura del JSONB `receta` — ver DECISIONES_PENDIENTES.md (Opción A: cantidad por porción + flag escala).
+  const ROSA_SVG = '<svg viewBox="0 0 52 52" fill="none"><rect x="23" y="39" width="6" height="7" rx="1.5" fill="#A84060"/><circle cx="26" cy="23" r="13" fill="#D4857A"/><circle cx="26" cy="23" r="9" fill="#C06B60"/><path d="M26 14 C24 11 20 11 18 13 C16 15 17 18 19 19 C17 19 15 21 16 24 C17 27 20 28 22 27 C21 29 22 32 25 32 C28 32 29 29 28 27 C30 28 33 27 34 24 C35 21 33 19 31 19 C33 18 34 15 32 13 C30 11 27 11 26 14Z" fill="#D4857A"/><circle cx="26" cy="23" r="4" fill="#A84060"/><path d="M26 39 C26 39 22 35 20 31" stroke="#6B8F6B" stroke-width="2" stroke-linecap="round" fill="none"/><ellipse cx="18" cy="34" rx="4" ry="3" transform="rotate(-30 18 34)" fill="#6B8F6B"/></svg>';
+
+  const RECETA_DEMO = {
+    kit_nombre: 'Rosa de Sant Jordi',
+    badge_text: 'Sant Jordi',
+    badge_cls: 'badge-santjordi',
+    svg: ROSA_SVG,
+    bg: '#FDF0F2',
+    receta: {
+      version: 1,
+      porciones_base: 1,
+      porciones_disponibles: [1, 2, 4, 6, 8, 10],
+      tiempo_min: 30,
+      dificultad: 'Fácil · Nivel 1',
+      alergenos: ['Gluten', 'Lácteos', 'Soja'],
+      intro: 'Una rosa dulce de chocolate y fresa para regalar el 23 de abril. Sin horno: solo montar, decorar y sorprender.',
+      ingredientes: [
+        { nombre: 'Obleas de chocolate blanco (pétalos)', cantidad: 6, unidad: 'ud', escala: true },
+        { nombre: 'Chocolate ruby para fundir', cantidad: 30, unidad: 'g', escala: true },
+        { nombre: 'Fresa deshidratada en polvo', cantidad: 8, unidad: 'g', escala: true },
+        { nombre: 'Perlas doradas comestibles', cantidad: 5, unidad: 'g', escala: true },
+        { nombre: 'Tallo de regaliz verde', cantidad: 1, unidad: 'ud', escala: true },
+        { nombre: 'Plantilla de montaje de la rosa', cantidad: 1, unidad: 'ud', escala: false },
+        { nombre: 'Sobre de polvo brillante comestible', cantidad: 1, unidad: 'sobre', escala: false }
+      ],
+      utensilios: ['Bol pequeño apto para microondas', 'Pincel de cocina', 'Papel vegetal', 'Cuchara'],
+      pasos: [
+        { n: 1, texto: 'Funde el chocolate ruby en el bol, en el microondas a golpes de 20 segundos, removiendo entre cada uno hasta que quede liso.', consejo: 'No lo calientes de más: el chocolate se quema con facilidad.' },
+        { n: 2, texto: 'Coloca la plantilla de montaje sobre el papel vegetal. Te marcará dónde va cada pétalo.' },
+        { n: 3, texto: 'Pinta el borde de cada oblea con un poco de chocolate fundido y pégalas una sobre otra, ligeramente giradas, formando la flor.', consejo: 'Empieza por los pétalos exteriores y ciérrate hacia el centro.' },
+        { n: 4, texto: 'Espolvorea la fresa deshidratada por el centro y reparte las perlas doradas mientras el chocolate sigue blando.' },
+        { n: 5, texto: 'Inserta el tallo de regaliz en la base y fíjalo con una gota de chocolate.' },
+        { n: 6, texto: 'Deja enfriar 10 minutos, da un toque final con el polvo brillante y ¡lista para regalar!', consejo: 'Para un acabado pro, enfríala en la nevera 5 minutos antes del brillo.' }
+      ],
+      consejos: [
+        'Si el chocolate espesa mientras trabajas, caliéntalo 10 segundos más.',
+        'Envuélvela en papel celofán transparente con un lazo dorado para regalo.',
+        'Aguanta perfecta 3 días en un lugar fresco y seco (no en la nevera una vez decorada).'
+      ],
+      plantilla: { label: 'Descargar plantilla de montaje (PDF)', url: '' }
     }
-    cont.innerHTML = '<div class="kits-grid">'+rows.map(r=>{
-      const k = r.kits; if(!k) return '';
-      const t = k.temporada || '';
-      return '<div class="kit-card"><div class="kit-img" style="background:'+kitBg(t)+';"><svg viewBox="0 0 52 52" fill="none">'+kitIcon(t)+'</svg>'+
-        '<span class="kit-badge '+(KIT_BADGE_CLASS[t]||'')+'">'+t+'</span></div>'+
-        '<div class="kit-body"><div class="kit-name">'+k.nombre+'</div><div class="kit-desc">'+(k.descripcion||'')+'</div>'+
-        '<div class="kit-footer"><span class="kit-sizes">Nivel '+(k.nivel||1)+'</span><span class="kit-cta">Ver receta →</span></div></div></div>';
-    }).join('')+'</div>';
+  };
+
+  // redondeo del escalado — provisional "al más cercano"; ver DECISIÓN 1 (¿hacia arriba?)
+  function escalar(cant, personas, base){
+    const v = cant * (personas / base);
+    return Number.isInteger(v) ? v : Math.round(v * 10) / 10;
   }
 
+  let recetaActual = null;
+  let personasSel = 2;
+
+  function openReceta(kit){
+    recetaActual = kit;
+    const r = kit.receta;
+    personasSel = r.porciones_disponibles.includes(2) ? 2 : r.porciones_disponibles[0];
+    const emoji = document.getElementById('receta-emoji');
+    emoji.style.background = kit.bg; emoji.innerHTML = kit.svg;
+    const badge = document.getElementById('receta-badge');
+    badge.className = 'rbadge kit-badge ' + kit.badge_cls; badge.textContent = kit.badge_text;
+    document.getElementById('receta-title').textContent = kit.kit_nombre;
+    document.getElementById('receta-intro').textContent = r.intro;
+    document.getElementById('receta-dif').textContent = r.dificultad;
+    document.getElementById('receta-tiempo').textContent = r.tiempo_min + ' min';
+    document.getElementById('receta-aler').textContent = (r.alergenos && r.alergenos.length) ? r.alergenos.join(', ') : 'Ninguno';
+    document.getElementById('serv-opts').innerHTML = r.porciones_disponibles.map(p =>
+      '<button class="serv-opt'+(p===personasSel?' active':'')+'" onclick="setPersonas('+p+')">'+p+'</button>').join('');
+    document.getElementById('uten-list').innerHTML = r.utensilios.map(u => '<li>'+u+'</li>').join('');
+    document.getElementById('pasos-list').innerHTML = r.pasos.map(p =>
+      '<li class="paso-item"><div class="paso-circle">'+p.n+'</div><div class="paso-text">'+p.texto+
+      (p.consejo ? '<span class="paso-consejo">💡 '+p.consejo+'</span>' : '')+'</div></li>').join('');
+    document.getElementById('consejos-list').innerHTML = r.consejos.map(c => '<li>'+c+'</li>').join('');
+    const pl = document.getElementById('receta-plantilla');
+    if(r.plantilla && r.plantilla.url){
+      pl.innerHTML = '<a class="btn-primary" href="'+r.plantilla.url+'" target="_blank" rel="noopener">'+r.plantilla.label+'</a>';
+    } else {
+      pl.innerHTML = '<a class="btn-primary" style="opacity:0.5;cursor:not-allowed;">'+(r.plantilla?r.plantilla.label:'Plantilla')+' (próximamente)</a>';
+    }
+    renderIngredientes();
+    go('receta');
+  }
+
+  function setPersonas(p){
+    personasSel = p;
+    document.querySelectorAll('#serv-opts .serv-opt').forEach(b =>
+      b.classList.toggle('active', parseInt(b.textContent,10)===p));
+    renderIngredientes();
+  }
+
+  function renderIngredientes(){
+    const r = recetaActual.receta;
+    document.getElementById('ing-list').innerHTML = r.ingredientes.map(ing => {
+      const cant = ing.escala ? escalar(ing.cantidad, personasSel, r.porciones_base) : ing.cantidad;
+      return '<li class="'+(ing.escala?'':'fixed')+'"><span class="ing-name">'+ing.nombre+'</span>'+
+        '<span class="ing-qty">'+cant+' '+ing.unidad+'</span></li>';
+    }).join('');
+  }
+
+  // ====== ROUTER ======
   let currentUser = null;
-  let isAdmin = false;
-  let adminKits = [];
-  let pendingScan = false;
-  let pendingCanjeoCode = null;
-
-  function toggleMenu(){
-    document.getElementById('nav-links').classList.toggle('open');
-    document.getElementById('nav-toggle').classList.toggle('open');
-  }
-  function closeMenu(){
-    document.getElementById('nav-links').classList.remove('open');
-    document.getElementById('nav-toggle').classList.remove('open');
-  }
-  function goSection(id){
-    go('landing');
-    setTimeout(()=>{ const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth'}); }, 80);
-  }
-
   function go(view){
-    closeMenu();
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     document.getElementById('view-'+view).classList.add('active');
     window.scrollTo(0,0);
     renderNav(view);
-    if(view==='admin' && isAdmin){ loadAdminKits(); cargarCodigosAdmin(); }
-  }
-  function renderNav(view){
-    const nav = document.getElementById('nav-links');
-    let html = '';
-    html += '<a onclick="go(\'landing\')">Inicio</a>';
-    html += '<a onclick="goSection(\'kits\')">Kits</a>';
-    html += '<a onclick="goSection(\'insignias\')">Insignias</a>';
-    html += '<a class="scan-link" onclick="openScanner()">⊡ Escanear QR</a>';
-    if(currentUser){
-      html += '<a onclick="go(\'app\')">Mi cuenta</a>';
-      if(isAdmin){ html += '<a onclick="go(\'admin\')">Admin</a>'; }
-      html += '<a onclick="doLogout()">Cerrar sesión</a>';
-    } else {
-      html += '<button class="btn-nav" onclick="go(\'login\')">Acceder</button>';
-    }
-    nav.innerHTML = html;
-    updateLandingCTAs();
-  }
-  function ctaCuenta(){ go(currentUser ? 'app' : 'registro'); }
-  function updateLandingCTAs(){
-    document.querySelectorAll('.landing-cta').forEach(el=>{
-      el.textContent = currentUser ? 'Ir a mi cuenta' : el.getAttribute('data-guest');
-    });
   }
 
+  function renderNav(view){
+    const nav = document.getElementById('nav-links');
+    if(currentUser && view==='app'){
+      nav.innerHTML = '';
+    } else if(currentUser){
+      nav.innerHTML = '<a class="always" onclick="go(\'app\')">Mi cuenta</a>';
+    } else if(view==='landing'){
+      nav.innerHTML = '<a href="#como">Cómo funciona</a><a href="#kits">Kits</a><a href="#insignias">Insignias</a><button class="btn-nav" onclick="go(\'login\')">Acceder</button>';
+    } else {
+      nav.innerHTML = '<button class="btn-nav" onclick="go(\'landing\')">Inicio</button>';
+    }
+  }
+
+  // ====== AUTH ======
   function msg(id, text, type){ const el=document.getElementById(id); el.textContent=text; el.className='auth-msg '+type; }
 
   async function doRegister(){
@@ -595,8 +714,10 @@
     const { data, error } = await sb.auth.signUp({ email, password:pass, options:{ data:{ nombre:name } } });
     btn.disabled=false; btn.textContent='Crear cuenta';
     if(error){ msg('reg-msg', error.message, 'error'); return; }
-    if(data.session){ enterApp(); } else { msg('reg-msg','¡Cuenta creada! Revisa tu correo para confirmar y luego inicia sesión.','ok'); }
+    if(data.session){ enterApp(); }
+    else { msg('reg-msg','¡Cuenta creada! Revisa tu correo para confirmar y luego inicia sesión.','ok'); }
   }
+
   async function doLogin(){
     const email=document.getElementById('login-email').value.trim();
     const pass=document.getElementById('login-pass').value;
@@ -607,419 +728,19 @@
     if(error){ msg('login-msg','Correo o contraseña incorrectos.','error'); return; }
     enterApp();
   }
-  async function doLogout(){ await sb.auth.signOut(); currentUser=null; isAdmin=false; adminKits=[]; go('landing'); }
 
-  async function loadMisKits(uid){
-    const { data } = await sb.from('codigos').select('codigo, usado_en, kits(nombre,temporada,nivel,descripcion)').eq('usado_por', uid).order('usado_en',{ascending:false});
-    renderMisKits(data||[]);
-  }
-  async function loadMisBadges(uid){
-    const { data } = await sb.from('usuarios_insignias').select('insignias(nivel)').eq('usuario_id', uid);
-    const levels = (data||[]).map(r => r.insignias && r.insignias.nivel).filter(x=>x);
-    renderMyBadges(levels);
-  }
+  async function doLogout(){ await sb.auth.signOut(); currentUser=null; go('landing'); }
 
-  function cmsg(t,type){ const e=document.getElementById('canjear-msg'); e.textContent=t; e.className='canjear-msg '+type; }
-
-  // Lógica central de canjeo, reutilizada por el formulario manual y por el escáner QR
-  async function procesarCanjeo(code){
-    const { data, error } = await sb.rpc('canjear_codigo', { p_codigo: code });
-    if(error){
-      if((error.message||'').includes('codigo_eliminado')){ return { ok:false, msg:'Este código ha sido eliminado y ya no es válido.' }; }
-      return { ok:false, msg:'Ha ocurrido un error. Inténtalo de nuevo.' };
-    }
-    if(!data || !data.ok){
-      const m = { no_autenticado:'Debes iniciar sesión.', codigo_usado:'Este código ya ha sido canjeado.', codigo_invalido:'Código no válido. Revísalo e inténtalo de nuevo.' };
-      return { ok:false, msg:(data && m[data.error]) || 'No se ha podido canjear.' };
-    }
-    const { data:{ user } } = await sb.auth.getUser();
-    await loadMisKits(user.id); await loadMisBadges(user.id);
-    const steps = [];
-    const nivelesNuevos = [...new Set(data.insignias_nuevas || [])];
-    nivelesNuevos.forEach(lvl => { const b = BADGES.find(x=>x.lvl===lvl); if(b) steps.push({type:'badge', badge:b}); });
-    steps.push({ type:'recipe', kit_nombre:data.kit_nombre, kit_temporada:data.kit_temporada });
-    openModalQueue(steps);
-    return { ok:true };
-  }
-
-  async function canjearCodigo(){
-    const input=document.getElementById('codigo-input');
-    const code=input.value.trim().toUpperCase();
-    if(!code){ cmsg('Introduce un código.','error'); return; }
-    const btn=document.getElementById('canjear-btn'); btn.disabled=true; btn.textContent='Canjeando...';
-    const res = await procesarCanjeo(code);
-    btn.disabled=false; btn.textContent='Canjear';
-    if(!res.ok){ cmsg(res.msg,'error'); return; }
-    cmsg('','ok'); document.getElementById('canjear-msg').className='canjear-msg';
-    input.value='';
-  }
-
-  // ---- Escáner QR ----
-  let qrScanner = null;
-  function extraerCodigo(texto){
-    if(!texto) return null;
-    texto = texto.trim();
-    const enlace = texto.match(/canjear=([A-Za-z0-9\-]+)/i);
-    if(enlace){ return enlace[1].toUpperCase(); }
-    const suelto = texto.match(/KRE-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}/i);
-    if(suelto){ return suelto[0].toUpperCase(); }
-    return null;
-  }
-  function shint(t){ document.getElementById('scanner-hint').textContent = t; }
-  async function openScanner(){
-    closeMenu();
-    if(!currentUser){ pendingScan = true; go('login'); msg('login-msg','Inicia sesión para escanear y canjear tu kit.','ok'); return; }
-    if(typeof Html5Qrcode === 'undefined'){ document.getElementById('scanner-overlay').classList.add('show'); shint('No se pudo cargar el lector. Recarga la página e inténtalo de nuevo.'); return; }
-    document.getElementById('scanner-overlay').classList.add('show');
-    shint('Apunta la cámara al código QR de tu kit.');
-    try {
-      qrScanner = new Html5Qrcode('qr-reader');
-      await qrScanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 230, height: 230 } },
-        onScanOk,
-        () => {}
-      );
-    } catch(e){
-      shint('No se pudo acceder a la cámara. Revisa que has dado permiso en el navegador.');
-    }
-  }
-  function onScanOk(textoLeido){
-    const code = extraerCodigo(textoLeido);
-    if(!code){ shint('Ese QR no parece un código Kreando. Prueba con otro.'); return; }
-    stopScanner();
-    closeScanner();
-    pedirConfirmacion(code);
-  }
-  async function stopScanner(){
-    if(qrScanner){
-      try { await qrScanner.stop(); await qrScanner.clear(); } catch(e){}
-      qrScanner = null;
-    }
-  }
-  function closeScanner(){ stopScanner(); document.getElementById('scanner-overlay').classList.remove('show'); }
-
-  // ---- Confirmación antes de canjear ----
-  let pendingCode = null;
-  function pedirConfirmacion(code){
-    pendingCode = code;
-    document.getElementById('confirm-code').textContent = code;
-    document.getElementById('confirm-overlay').classList.add('show');
-  }
-  function closeConfirm(){ document.getElementById('confirm-overlay').classList.remove('show'); pendingCode = null; }
-  async function confirmarCanjeo(){
-    if(!pendingCode) return;
-    const code = pendingCode;
-    const btn = document.getElementById('confirm-yes'); btn.disabled = true; btn.textContent = 'Canjeando...';
-    const res = await procesarCanjeo(code);
-    btn.disabled = false; btn.textContent = 'Canjear ahora';
-    closeConfirm();
-    if(!document.getElementById('view-app').classList.contains('active') && res.ok){ /* los popups ya se muestran encima */ }
-    if(!res.ok){ go('app'); cmsg(res.msg,'error'); }
-  }
-
-  let modalQueue=[], modalIdx=0;
-  function openModalQueue(steps){ modalQueue=steps; modalIdx=0; document.getElementById('modal-overlay').classList.add('show'); showModalStep(); }
-  function showModalStep(){
-    const s=modalQueue[modalIdx];
-    const card=document.getElementById('modal-card');
-    card.style.animation='none'; void card.offsetWidth; card.style.animation='';
-    const visual=document.getElementById('modal-visual');
-    const last = modalIdx===modalQueue.length-1;
-    if(s.type==='badge'){
-      visual.className='modal-visual badge';
-      visual.innerHTML='<svg width="130" viewBox="0 0 90 108" fill="none">'+s.badge.svg+'</svg>';
-      document.getElementById('modal-eyebrow').textContent='Insignia desbloqueada';
-      document.getElementById('modal-title').textContent=s.badge.name;
-      document.getElementById('modal-text').textContent=s.badge.desc;
-    } else {
-      visual.className='modal-visual recipe';
-      visual.innerHTML='<div class="kiticon" style="background:'+kitBg(s.kit_temporada)+';"><svg viewBox="0 0 52 52" fill="none">'+kitIcon(s.kit_temporada)+'</svg></div>';
-      document.getElementById('modal-eyebrow').textContent='Receta desbloqueada';
-      document.getElementById('modal-title').textContent=s.kit_nombre;
-      document.getElementById('modal-text').textContent='Ya puedes ver la receta paso a paso en tus kits.';
-    }
-    document.getElementById('modal-btn').textContent = last ? '¡Genial!' : 'Continuar';
-    launchConfetti();
-  }
-  function nextModalStep(){
-    modalIdx++;
-    if(modalIdx>=modalQueue.length){ document.getElementById('modal-overlay').classList.remove('show'); return; }
-    showModalStep();
-  }
-  function launchConfetti(){
-    const c=document.getElementById('modal-confetti'); c.innerHTML='';
-    const colors=['#D4857A','#C9A84C','#6B8F6B','#E8958A','#F0C040'];
-    for(let i=0;i<16;i++){ const p=document.createElement('div'); p.className='confetti-piece';
-      p.style.left=(Math.random()*100)+'%'; p.style.background=colors[i%colors.length];
-      p.style.borderRadius=Math.random()>0.5?'50%':'2px';
-      p.style.animation='confettiFall '+(1.4+Math.random()*0.8).toFixed(2)+'s ease-in '+(Math.random()*0.3).toFixed(2)+'s forwards';
-      c.appendChild(p); }
-  }
-
-  async function checkAdmin(uid){
-    try {
-      const { data } = await sb.from('admins').select('id').eq('id', uid).maybeSingle();
-      isAdmin = !!data;
-    } catch(e){ isAdmin = false; }
-  }
-
-  async function loadAdminKits(){
-    if(adminKits.length===0){
-      const { data } = await sb.from('kits').select('id,nombre,temporada').order('nivel');
-      adminKits = data || [];
-    }
-    document.getElementById('admin-kit').innerHTML = adminKits.map(k =>
-      '<option value="'+k.id+'">'+k.nombre+' — '+k.temporada+'</option>').join('');
-  }
-
-  function amsg(t,type){ const e=document.getElementById('admin-msg'); e.textContent=t; e.className='admin-msg '+type; }
-
-  async function generarCodigosAdmin(){
-    const kitId = document.getElementById('admin-kit').value;
-    const cantidad = parseInt(document.getElementById('admin-cantidad').value,10);
-    const lote = document.getElementById('admin-lote').value.trim();
-    document.getElementById('admin-result').innerHTML='';
-    if(!kitId){ amsg('Elige un kit.','error'); return; }
-    if(!cantidad || cantidad<1 || cantidad>500){ amsg('La cantidad debe estar entre 1 y 500.','error'); return; }
-    if(!lote){ amsg('Pon una etiqueta de lote (ej. Navidad-2025).','error'); return; }
-    const btn=document.getElementById('admin-gen-btn'); btn.disabled=true; btn.textContent='Generando...';
-    const { data, error } = await sb.rpc('generar_codigos', { p_kit_id:kitId, p_cantidad:cantidad, p_lote:lote });
-    btn.disabled=false; btn.textContent='Generar';
-    if(error){
-      const m={ no_autorizado:'No tienes permiso para generar códigos.', cantidad_invalida:'Cantidad no válida (1-500).', kit_invalido:'El kit seleccionado no existe.' };
-      amsg(m[error.message] || 'Error al generar. Inténtalo de nuevo.','error'); return;
-    }
-    const codigos=(data||[]).map(r=>r.codigo);
-    amsg('✓ '+codigos.length+' códigos generados en el lote "'+lote+'".','ok');
-    document.getElementById('admin-result').innerHTML = codigos.map(c=>'<div class="codigo-chip">'+c+'</div>').join('');
-    document.getElementById('admin-filter-lote').value = lote;
-    cargarCodigosAdmin();
-  }
-
-  let codigosCargados = [];
-  let adminTab = 'sincanjear';
-  let seleccionados = new Set();
-
-  async function cargarCodigosAdmin(){
-    const lote = document.getElementById('admin-filter-lote').value.trim();
-    let q = sb.from('codigos').select('codigo,lote,usado,eliminado,kits(nombre)').order('creado_en',{ascending:false}).limit(1000);
-    if(lote){ q = q.eq('lote', lote); }
-    const { data, error } = await q;
-    codigosCargados = (error || !data) ? [] : data;
-    seleccionados.clear();
-    if(error){ document.getElementById('admin-tbody').innerHTML=''; document.getElementById('admin-stats').textContent='No se pudieron cargar los códigos.'; return; }
-    renderAdminTabla();
-  }
-
-  function codigosDeTab(){
-    return codigosCargados.filter(r=>{
-      if(adminTab==='eliminados') return r.eliminado;
-      if(r.eliminado) return false;
-      return adminTab==='canjeados' ? r.usado : !r.usado;
-    });
-  }
-
-  function setAdminTab(t){
-    adminTab=t;
-    seleccionados.clear();
-    ['sincanjear','canjeados','eliminados'].forEach(k=>{
-      document.getElementById('tab-'+k).classList.toggle('active', k===t);
-    });
-    renderAdminTabla();
-  }
-
-  function renderAdminTabla(){
-    const tbody=document.getElementById('admin-tbody');
-    const stats=document.getElementById('admin-stats');
-    const nSin=codigosCargados.filter(r=>!r.eliminado&&!r.usado).length;
-    const nCanj=codigosCargados.filter(r=>!r.eliminado&&r.usado).length;
-    const nElim=codigosCargados.filter(r=>r.eliminado).length;
-    document.getElementById('tab-sincanjear').textContent='Sin canjear ('+nSin+')';
-    document.getElementById('tab-canjeados').textContent='Canjeados ('+nCanj+')';
-    document.getElementById('tab-eliminados').textContent='Eliminados ('+nElim+')';
-    const filas=codigosDeTab();
-    if(filas.length===0){ tbody.innerHTML=''; stats.textContent='No hay códigos en este apartado.'; renderBulkBar(); return; }
-    stats.textContent = filas.length+' código'+(filas.length===1?'':'s')+' en este apartado.';
-    tbody.innerHTML = filas.map(r=>{
-      const kit = r.kits ? r.kits.nombre : '—';
-      const estado = r.usado?'<span class="estado-usado">Canjeado</span>':'<span class="estado-libre">Libre</span>';
-      const chk = seleccionados.has(r.codigo) ? 'checked' : '';
-      let acc;
-      if(adminTab==='eliminados'){
-        acc = '<button class="btn-row-act" onclick="restaurarCodigo(\''+r.codigo+'\')">Restaurar</button> '+
-              '<button class="btn-row-act danger" onclick="borrarCodigoDef(\''+r.codigo+'\')">Borrar</button>';
-      } else {
-        acc = '<button class="btn-row-act danger" onclick="eliminarCodigo(\''+r.codigo+'\')">Eliminar</button>';
-      }
-      return '<tr><td class="col-check"><input type="checkbox" class="kcheck" '+chk+' onchange="toggleSel(\''+r.codigo+'\',this.checked)" /></td>'+
-        '<td class="codigo-mono">'+r.codigo+'</td><td>'+kit+'</td><td>'+(r.lote||'—')+'</td><td>'+estado+'</td><td>'+acc+'</td></tr>';
-    }).join('');
-    const all = document.getElementById('check-all');
-    all.checked = filas.length>0 && filas.every(r=>seleccionados.has(r.codigo));
-    renderBulkBar();
-  }
-
-  function toggleSel(code, checked){
-    if(checked) seleccionados.add(code); else seleccionados.delete(code);
-    const filas=codigosDeTab();
-    document.getElementById('check-all').checked = filas.length>0 && filas.every(r=>seleccionados.has(r.codigo));
-    renderBulkBar();
-  }
-  function toggleSelAll(checked){
-    const filas=codigosDeTab();
-    if(checked){ filas.forEach(r=>seleccionados.add(r.codigo)); } else { filas.forEach(r=>seleccionados.delete(r.codigo)); }
-    renderAdminTabla();
-  }
-  function limpiarSeleccion(){ seleccionados.clear(); renderAdminTabla(); }
-
-  function renderBulkBar(){
-    const bar=document.getElementById('admin-bulk');
-    const n=seleccionados.size;
-    if(n===0){ bar.classList.remove('show'); return; }
-    bar.classList.add('show');
-    document.getElementById('bulk-count').textContent = n+' seleccionado'+(n===1?'':'s');
-    let acc;
-    if(adminTab==='eliminados'){
-      acc = '<button class="btn-row-act" onclick="restaurarSeleccionados()">Restaurar seleccionados</button> '+
-            '<button class="btn-row-act danger" onclick="borrarSeleccionadosDef()">Borrar seleccionados</button>';
-    } else {
-      acc = '<button class="btn-row-act danger" onclick="eliminarSeleccionados()">Eliminar seleccionados</button>';
-    }
-    document.getElementById('bulk-actions').innerHTML = acc;
-  }
-
-  async function eliminarCodigo(code){
-    const { error } = await sb.rpc('admin_marcar_eliminado',{ p_codigo:code, p_eliminado:true });
-    if(error){ pdfmsg('No se pudo eliminar. ¿Has ejecutado el SQL de la papelera en Supabase?','error'); return; }
-    await cargarCodigosAdmin();
-  }
-  async function restaurarCodigo(code){
-    const { error } = await sb.rpc('admin_marcar_eliminado',{ p_codigo:code, p_eliminado:false });
-    if(error){ pdfmsg('No se pudo restaurar el código.','error'); return; }
-    await cargarCodigosAdmin();
-  }
-  async function borrarCodigoDef(code){
-    if(!confirm('¿Borrar definitivamente el código '+code+'? Esta acción no se puede deshacer.')) return;
-    const { error } = await sb.rpc('admin_borrar_codigo',{ p_codigo:code });
-    if(error){ pdfmsg('No se pudo borrar el código.','error'); return; }
-    await cargarCodigosAdmin();
-  }
-
-  async function eliminarSeleccionados(){
-    const codes=[...seleccionados]; if(codes.length===0) return;
-    if(!confirm('¿Mover '+codes.length+' código(s) a la papelera?')) return;
-    const { error } = await sb.rpc('admin_marcar_eliminado_lote',{ p_codigos:codes, p_eliminado:true });
-    if(error){ pdfmsg('No se pudieron eliminar. ¿Has ejecutado el SQL de acciones en bloque?','error'); return; }
-    await cargarCodigosAdmin();
-  }
-  async function restaurarSeleccionados(){
-    const codes=[...seleccionados]; if(codes.length===0) return;
-    const { error } = await sb.rpc('admin_marcar_eliminado_lote',{ p_codigos:codes, p_eliminado:false });
-    if(error){ pdfmsg('No se pudieron restaurar.','error'); return; }
-    await cargarCodigosAdmin();
-  }
-  async function borrarSeleccionadosDef(){
-    const codes=[...seleccionados]; if(codes.length===0) return;
-    if(!confirm('¿Borrar DEFINITIVAMENTE '+codes.length+' código(s)? Esta acción no se puede deshacer.')) return;
-    const { error } = await sb.rpc('admin_borrar_codigos_lote',{ p_codigos:codes });
-    if(error){ pdfmsg('No se pudieron borrar.','error'); return; }
-    await cargarCodigosAdmin();
-  }
-
-  function pdfmsg(t,type){ const e=document.getElementById('admin-pdf-msg'); e.textContent=t; e.className='admin-msg '+type; }
-
-  // Dibuja el isotipo de Kreando (círculo crema + aro dorado + K) en el centro del QR
-  function dibujarLogoEnQR(ctx, size){
-    const cx=size/2, cy=size/2;
-    const r=size*0.11;          // radio del círculo del logo (~22% de diámetro)
-    const pad=r*0.30;
-    // recuadro blanco de respaldo
-    ctx.fillStyle='#ffffff';
-    const s=r+pad;
-    if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(cx-s, cy-s, s*2, s*2, s*0.32); ctx.fill(); }
-    else { ctx.fillRect(cx-s, cy-s, s*2, s*2); }
-    // círculo crema
-    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle='#F5F0E8'; ctx.fill();
-    // aro dorado
-    ctx.lineWidth=r*0.12; ctx.strokeStyle='#C9A84C';
-    ctx.beginPath(); ctx.arc(cx,cy,r-ctx.lineWidth/2,0,Math.PI*2); ctx.stroke();
-    // letra K
-    ctx.fillStyle='#2D3B2D'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.font='600 '+(r*1.25)+'px Poppins, sans-serif';
-    ctx.fillText('K', cx, cy + r*0.04);
-  }
-
-  function generarQRCanvas(url){
-    const qr = qrcode(0, 'H');          // 0 = versión automática, H = corrección alta
-    qr.addData(url);
-    qr.make();
-    const count = qr.getModuleCount();
-    const margin = 4;                   // módulos de margen blanco
-    const cell = Math.max(6, Math.floor(600/(count+margin*2)));
-    const size = cell*(count+margin*2);
-    const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,size,size);
-    ctx.fillStyle = '#2D3B2D';
-    for(let r=0;r<count;r++){
-      for(let c=0;c<count;c++){
-        if(qr.isDark(r,c)){ ctx.fillRect((margin+c)*cell, (margin+r)*cell, cell, cell); }
-      }
-    }
-    dibujarLogoEnQR(ctx, size);
-    return canvas;
-  }
-
-  async function descargarQRsPDF(){
-    if(typeof qrcode==='undefined'){ pdfmsg('No se cargó el generador de QR. Recarga la página (Ctrl+F5) e inténtalo de nuevo.','error'); return; }
-    if(!window.jspdf){ pdfmsg('No se cargó el generador de PDF. Recarga la página (Ctrl+F5) e inténtalo de nuevo.','error'); return; }
-    const codes = codigosDeTab().map(r=>r.codigo);
-    if(codes.length===0){ pdfmsg('No hay códigos en este apartado. Pulsa "Buscar" y elige la pestaña "Sin canjear".','error'); return; }
-    if(codes.length>120 && !confirm('Vas a generar '+codes.length+' QRs (varias páginas). Puede tardar un poco. ¿Continuar?')){ return; }
-
-    const btn=document.getElementById('admin-pdf-btn'); btn.disabled=true;
-    try { await document.fonts.load("600 40px Poppins"); } catch(e){}
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ unit:'mm', format:'a4' });
-    const PAGE_W=210, COLS=3, ROWS=4, CELL=65;
-    const MX=(PAGE_W-COLS*CELL)/2, MY=(297-ROWS*CELL)/2;
-    const perPage=COLS*ROWS;
-    const lote = document.getElementById('admin-filter-lote').value.trim();
-
-    for(let i=0;i<codes.length;i++){
-      const code=codes[i];
-      const idx=i%perPage;
-      if(i>0 && idx===0){ pdf.addPage(); }
-      const col=idx%COLS, row=Math.floor(idx/COLS);
-      const x=MX+col*CELL, y=MY+row*CELL;
-
-      // marco de recorte (línea fina discontinua)
-      pdf.setDrawColor(205,205,205); pdf.setLineWidth(0.2); pdf.setLineDashPattern([1,1],0);
-      pdf.rect(x, y, CELL, CELL); pdf.setLineDashPattern([],0);
-
-      // "KREANDO" pequeño y discreto arriba
-      pdf.setFont('helvetica','bold'); pdf.setFontSize(8); pdf.setTextColor(45,59,45);
-      pdf.text('KREANDO', x+CELL/2, y+7, { align:'center', charSpace:0.8 });
-
-      // QR centrado
-      const canvas=await generarQRCanvas('https://kreando.shop/?canjear='+code);
-      const QS=44, qx=x+(CELL-QS)/2, qy=y+10;
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', qx, qy, QS, QS);
-
-      // código en texto debajo
-      pdf.setFont('courier','bold'); pdf.setFontSize(11); pdf.setTextColor(45,59,45);
-      pdf.text(code, x+CELL/2, qy+QS+7, { align:'center' });
-
-      if(i%6===0){ pdfmsg('Generando QRs… '+(i+1)+' / '+codes.length,'ok'); await new Promise(r=>setTimeout(r,0)); }
-    }
-
-    const nombre = 'kreando-qr'+(lote?'-'+lote.replace(/[^A-Za-z0-9\-]/g,'') : '')+'.pdf';
-    pdf.save(nombre);
-    pdfmsg('✓ Hoja de QRs generada ('+codes.length+' códigos). Revisa tu carpeta de descargas.','ok');
-    btn.disabled=false;
+  // Demo: kit canjeado de ejemplo en el dashboard (sustituir por datos reales de Supabase)
+  function renderMisKits(){
+    document.getElementById('mis-kits').innerHTML =
+      '<div class="kits-grid"><div class="kit-card" onclick="openReceta(RECETA_DEMO)">'+
+        '<div class="kit-img" style="background:'+RECETA_DEMO.bg+';">'+RECETA_DEMO.svg+
+          '<span class="kit-badge '+RECETA_DEMO.badge_cls+'">'+RECETA_DEMO.badge_text+'</span></div>'+
+        '<div class="kit-body"><div class="kit-name">'+RECETA_DEMO.kit_nombre+'</div>'+
+          '<div class="kit-desc">'+RECETA_DEMO.receta.intro+'</div>'+
+          '<div class="kit-footer"><span class="kit-sizes">Canjeado · ejemplo</span>'+
+          '<span class="kit-cta">Ver receta →</span></div></div></div></div>';
   }
 
   async function enterApp(){
@@ -1027,40 +748,17 @@
     currentUser = user;
     const nombre = (user.user_metadata && user.user_metadata.nombre) || 'Kreador';
     document.getElementById('greet-name').textContent = 'Hola, '+nombre+' 👋';
-    await checkAdmin(user.id);
+    renderMisKits();
+    renderMyBadges([]); // sin insignias todavía
     go('app');
-    await loadMisKits(user.id);
-    await loadMisBadges(user.id);
-    if(pendingScan){ pendingScan = false; setTimeout(openScanner, 300); }
-    if(pendingCanjeoCode){ const c=pendingCanjeoCode; pendingCanjeoCode=null; setTimeout(()=>pedirConfirmacion(c), 350); }
   }
 
-  // Lee el código del enlace (?canjear=KRE-XXXX-XXXX) al abrir la web desde un QR
-  function leerCodigoDeURL(){
-    const params = new URLSearchParams(window.location.search);
-    let code = params.get('canjear');
-    if(!code) return null;
-    code = code.trim().toUpperCase();
-    history.replaceState(null, '', window.location.pathname); // limpia la URL para no repetir al recargar
-    return code;
-  }
-
+  // ====== INIT ======
   (async function(){
-    renderLandingKits();
     renderLandingBadges();
-    const codigoURL = leerCodigoDeURL();
     const { data:{ session } } = await sb.auth.getSession();
-    if(session){
-      await enterApp();
-      if(codigoURL){ setTimeout(()=>pedirConfirmacion(codigoURL), 350); }
-    } else {
-      renderNav('landing');
-      if(codigoURL){
-        pendingCanjeoCode = codigoURL;
-        go('login');
-        msg('login-msg','Inicia sesión para canjear tu kit.','ok');
-      }
-    }
+    if(session){ await enterApp(); }
+    else { renderNav('landing'); }
   })();
 </script>
 </body>
